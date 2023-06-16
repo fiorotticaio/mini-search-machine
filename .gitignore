@@ -1,2 +1,5 @@
 /exemplo
 /exemplo2
+*.o
+trab3
+.vscode/
