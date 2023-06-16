@@ -12,7 +12,6 @@ struct node // RBT
 {
     char *chave;
     Doc **valores;
-    int numValores;
     bool cor;
     RBT *esq, *dir;
 };
@@ -22,7 +21,6 @@ RBT *criaNo(char *chave, Doc **valores)
     RBT *no = (RBT *)malloc(sizeof(RBT));
     no->chave = strdup(chave);
     no->valores = valores;
-    no->numValores = 1;
     no->cor = RED;
     no->esq = no->dir = NULL;
     return no;
