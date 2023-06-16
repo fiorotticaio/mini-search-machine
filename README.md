@@ -9,8 +9,8 @@
 - [] S : red black tree com chave id e valor a palavra
 
 - STRUCTS:
-- [] documento
-- [] red black tree
+- [X] documento
+- [X] red black tree
 - [] grafo
 
 - [] ir lendo e processando linha por linha  
