@@ -33,7 +33,7 @@ void liberaDocumento(Doc* documento) {
     free(documento);
 }
 
-char** leNomeDocumentos(char* dirEntrada) {
+char** leNomeDocumentos(char* dirEntrada, int* qtdDocs) {
     int numDocs = 0, numMaximoDocs = 1000;
     char** nomeDocs = (char**) malloc(numMaximoDocs * sizeof(char*));
 
@@ -65,6 +65,7 @@ char** leNomeDocumentos(char* dirEntrada) {
     nomeDocs[numDocs] = NULL; // Para facilitar iteração
 
     fclose(arq);
+    *qtdDocs = numDocs; // Atualizando o valor de qtdDocs para a main
     return nomeDocs;
 }
 
@@ -75,4 +76,44 @@ void liberaNomeDocumentos(char** nomeDocumentos) {
         i++;
     }
     free(nomeDocumentos);
+}
+
+Doc** leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
+    /* Criando o diretório onde estão os documentos */
+    char dirDocs[100];
+    sprintf(dirDocs, "%s/pages", dirEntrada);
+    FILE* arq = fopen(dirDocs, "r");
+
+    if (arq == NULL) {
+        printf("Erro ao abrir arquivo no diretorio: %s\n", dirDocs);
+        exit(1);
+    }
+
+    /*
+    Nota:
+    Para criar a tabela (árvore) T, vamos ter que passar por todos os documentos
+    pra conferir se dada palavra está lá, para assim ir criando as linhas da tabela.
+    Portando, não tem problema criar um vetor de documentos aqui.
+    */
+
+    Doc** documentos = (Doc**) malloc((numDocs+1) * sizeof(Doc*)); // +1 por causa do NULL
+
+    int i = 0;
+    while (nomeDocumentos[i] != NULL) {
+        documentos[i] = criaDocumento(nomeDocumentos[i], numDocs);
+        i++;
+    }
+    documentos[i] = NULL; // Para facilitar iteração
+
+    fclose(arq);
+    return documentos;
+}
+
+void liberaDocumentos(Doc** documentos) {
+    int i = 0;
+    while (documentos[i] != NULL) {
+        liberaDocumento(documentos[i]);
+        i++;
+    }
+    free(documentos);
 }
