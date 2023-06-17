@@ -11,6 +11,5 @@
 - STRUCTS:
 - [x] documento
 - [x] red black tree
-- [ ] grafo
 
 - [ ] ir lendo e processando linha por linha  
