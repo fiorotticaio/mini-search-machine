@@ -1,18 +1,19 @@
 #ifndef DOCUMENTO_H
-#define DOCUMENT_H
+#define DOCUMENTO_H
+
+#include <stdlib.h>
+#include <string.h>
 
 typedef struct documento Doc;
 
-// Cria um documento com o nome fornecido e
-// inicializa o pagerank com 1/numLinks
-Doc *criaDocumento(char *nome, int numLinks);
+Doc* criaDocumento(char* nome, int numLinks);
 
-char *getNome(Doc *documento);
+char *getNomeDocumento(Doc* documento);
 
-long double getPageRank(Doc *documento);
+long double getPageRankDocumento(Doc* documento);
 
-void setPageRank(Doc *documento, long double pageRank);
+void setPageRankDocumento(Doc* documento, long double pageRank);
 
-void liberaDocumento(Doc *documento);
+void liberaDocumentoDocumento(Doc* documento);
 
 #endif // DOCUMENTO_H
