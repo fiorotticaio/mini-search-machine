@@ -1,14 +1,18 @@
 #include "documento.h"
 
 struct documento {
-    char *nome;
+    char* nome;
     long double pageRank;
+    int numLinks; // Número de documentos para as quais o documento aponta
+    Doc** links; // Lista de documentos para as quais o documento aponta
 };
 
-Doc* criaDocumento(char* nome, int numLinks) {
+Doc* criaDocumento(char* nome, int numTotalDocs) {
     Doc *documento = (Doc*) malloc(sizeof(Doc));
     documento->nome = strdup(nome);
-    documento->pageRank = 1.0 / numLinks;
+    documento->pageRank = 1.0 / numTotalDocs;
+    documento->numLinks = 0;
+    documento->links = NULL;
     return documento;
 }
 
