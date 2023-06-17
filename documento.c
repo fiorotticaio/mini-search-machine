@@ -24,6 +24,14 @@ void setPageRankDocumento(Doc* documento, long double pageRank) {
     documento->pageRank = pageRank;
 }
 
+int getNumLinksDocumento(Doc* documento) {
+    return documento->numLinks;
+}
+
+void setNumLinksDocumento(Doc* documento, int numLinks) {
+    documento->numLinks = numLinks;
+}
+
 long double getPageRankDocumento(Doc* documento) {
     return documento->pageRank;
 }
@@ -116,4 +124,34 @@ void liberaDocumentos(Doc** documentos) {
         i++;
     }
     free(documentos);
+}
+
+void linkaDocumentos(Doc** documentos, char* dirEntrada) {
+    /* Criando diretório do arquivo do grafo */
+    char dirGrafo[100];
+    sprintf(dirGrafo, "%s/graph.txt", dirEntrada);
+    FILE* arq = fopen(dirGrafo, "r");
+
+    if (arq == NULL) {
+        printf("Erro ao abrir arquivo no diretorio: %s\n", dirGrafo);
+        exit(1);
+    }
+
+    char nomeDoc[100], nomeDocLink[100];
+    int qtdLinksDoc = 0, i = 0;
+
+    while (documentos[i] != NULL) {
+        fscanf(arq, "%s", nomeDoc); // Lê o nome do documento
+        fscanf(arq, "%d", &qtdLinksDoc); // Lê a quantidade de links do documento
+        setNumLinksDocumento(documentos[i], qtdLinksDoc); // Atualiza o número de links do documento
+        fscanf(arq, "%*[^\n]\n"); // Só por enquanto
+        int j = 0;
+        while (j < qtdLinksDoc) {
+            // TODO: Lógica de linkar os documentos
+            j++;
+        }
+        i++;
+    }
+
+    fclose(arq);
 }
