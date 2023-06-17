@@ -13,3 +13,6 @@
 - [x] red black tree
 
 - [ ] ir lendo e processando linha por linha  
+
+## Bugs
+- [ ] falta um free (alocado em "leDocumentos")
