@@ -26,7 +26,8 @@ int main(int argc, char** argv) {
   for (int i = 0; documentos[i] != NULL; i++) {
     printf("nome: %s\n", getNomeDocumento(documentos[i]));
     printf("page rank: %Lf\n", getPageRankDocumento(documentos[i]));
-    printf("num link: %d\n", getNumLinksDocumento(documentos[i]));
+    printf("num links in: %d\n", getNumLinksInDocumento(documentos[i]));
+    printf("num links out: %d\n", getNumLinksOutDocumento(documentos[i]));
     printf("\n");
   }
   

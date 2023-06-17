@@ -7,7 +7,7 @@
 
 typedef struct documento Doc;
 
-Doc* criaDocumento(char* nome, int numLinks);
+Doc* criaDocumento(char* nome, int numTotalDocs);
 
 char *getNomeDocumento(Doc* documento);
 
@@ -15,9 +15,19 @@ long double getPageRankDocumento(Doc* documento);
 
 void setPageRankDocumento(Doc* documento, long double pageRank);
 
-int getNumLinksDocumento(Doc* documento);
+int getNumLinksInDocumento(Doc* documento);
 
-void setNumLinksDocumento(Doc* documento, int numLinks);
+void setNumLinksInDocumento(Doc* documento, int numLinks);
+
+int getNumLinksOutDocumento(Doc* documento);
+
+void setNumLinksOutDocumento(Doc* documento, int numLinks);
+
+Doc* encontraDocumentoPeloNome(Doc** documentos, char* nome);
+
+void adicionaLinkOutDocumento(Doc* documento, Doc* link, int posicao);
+
+void adicionaLinkInDocumento(Doc* documento, Doc* link);
 
 void liberaDocumento(Doc* documento);
 
