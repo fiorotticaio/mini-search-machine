@@ -7,7 +7,7 @@ struct noDocs { // BRT
     RBTdocs *esq, *dir;
 };
 
-RBTdocs* criaNo(char* chave, Doc** valores) {
+RBTdocs* criaNoRBTdocs(char* chave, Doc** valores) {
     RBTdocs* no = (RBTdocs*) malloc(sizeof(RBTdocs));
     no->chave = strdup(chave);
     no->valores = valores;
@@ -16,7 +16,7 @@ RBTdocs* criaNo(char* chave, Doc** valores) {
     return no;
 }
 
-RBTdocs* rotacionaEsq(RBTdocs* no) {
+RBTdocs* rotacionaEsqRBTdocs(RBTdocs* no) {
     RBTdocs* x = no->dir;
     no->dir = x->esq;
     x->esq = no;
@@ -25,7 +25,7 @@ RBTdocs* rotacionaEsq(RBTdocs* no) {
     return x;
 }
 
-RBTdocs* rotacionaDir(RBTdocs *no) {
+RBTdocs* rotacionaDirRBTdocs(RBTdocs *no) {
     RBTdocs* x = no->esq;
     no->esq = x->dir;
     x->dir = no;
@@ -34,33 +34,33 @@ RBTdocs* rotacionaDir(RBTdocs *no) {
     return x;
 }
 
-void trocaCor(RBTdocs* no) {
+void trocaCorRBTdocs(RBTdocs* no) {
     no->cor = RED;
     no->esq->cor = BLACK;
     no->dir->cor = BLACK;
 }
 
-RBTdocs* insere_RBTdocs(RBTdocs* no, char* chave, Doc** valores) {
-    if (no == NULL) return criaNo(chave, valores);
+RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valores) {
+    if (no == NULL) return criaNoRBTdocs(chave, valores);
 
     int cmp = strcmp(chave, no->chave);
-    if (cmp < 0)        no->esq = insere_RBTdocs(no->esq, chave, valores);
-    else if (cmp > 0)   no->dir = insere_RBTdocs(no->dir, chave, valores);
+    if (cmp < 0)        no->esq = insereRBTdocs(no->esq, chave, valores);
+    else if (cmp > 0)   no->dir = insereRBTdocs(no->dir, chave, valores);
     else /* cmp == 0 */ no->valores = valores;
 
-    if (ehVermelho(no->dir) && !ehVermelho(no->esq))     no = rotacionaEsq(no);
-    if (ehVermelho(no->esq) && ehVermelho(no->esq->esq)) no = rotacionaDir(no);
-    if (ehVermelho(no->esq) && ehVermelho(no->dir))      trocaCor(no);
+    if (ehVermelhoRBTdocs(no->dir) && !ehVermelhoRBTdocs(no->esq))     no = rotacionaEsqRBTdocs(no);
+    if (ehVermelhoRBTdocs(no->esq) && ehVermelhoRBTdocs(no->esq->esq)) no = rotacionaDirRBTdocs(no);
+    if (ehVermelhoRBTdocs(no->esq) && ehVermelhoRBTdocs(no->dir))      trocaCorRBTdocs(no);
 
     return no;
 }
 
-bool ehVermelho(RBTdocs* no) {
+bool ehVermelhoRBTdocs(RBTdocs* no) {
     if (no == NULL) return BLACK;
     return no->cor == RED;
 }
 
-void liberaNo(RBTdocs* no) {
+void liberaNoRBTdocs(RBTdocs* no) {
     free(no->chave);
     free(no->valores);
     free(no);

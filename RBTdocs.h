@@ -11,26 +11,18 @@
 
 typedef struct noDocs RBTdocs;
 
-// struct node {
-//     char* chave;
-//     Doc** valores;
-//     int numValores;
-//     bool cor;
-//     RBTdocs *esq, *dir;
-// };
+RBTdocs* criaNoRBTdocs(char* chave, Doc** valores);
 
-RBTdocs* criaNo(char* chave, Doc** valores);
+RBTdocs* rotacionaEsqRBTdocs(RBTdocs* no);
 
-RBTdocs* rotacionaEsq(RBTdocs* no);
+RBTdocs* rotacionaDirRBTdocs(RBTdocs* no);
 
-RBTdocs* rotacionaDir(RBTdocs* no);
+void trocaCorRBTdocs(RBTdocs* no);
 
-void trocaCor(RBTdocs* no);
+RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valores);
 
-RBTdocs* insere_RBTdocs(RBTdocs* no, char* chave, Doc** valores);
+bool ehVermelhoRBTdocs(RBTdocs* no);
 
-bool ehVermelho(RBTdocs* no);
-
-void liberaNo(RBTdocs* no);
+void liberaNoRBTdocs(RBTdocs* no);
 
 #endif // RBT_DOCS_H
