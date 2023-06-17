@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "documento.h"
 #include "RBTpal.h"
+#include "RBTdocs.h"
 
 int main(int argc, char** argv) {
   /**
@@ -19,23 +20,16 @@ int main(int argc, char** argv) {
   int qtdDocs = 0;
   char** nomeDocumentos = leNomeDocumentos(argv[1], &qtdDocs);
   RBTpal* S = leStopWords(argv[1]);
-  Doc** documentos = leDocumentos(nomeDocumentos, qtdDocs, argv[1]);
+  RBTdocs* documentos = leDocumentos(nomeDocumentos, qtdDocs, argv[1]);
   linkaDocumentos(documentos, argv[1]);
 
-  /* Debug */
-  for (int i = 0; documentos[i] != NULL; i++) {
-    printf("nome: %s\n", getNomeDocumento(documentos[i]));
-    printf("page rank: %Lf\n", getPageRankDocumento(documentos[i]));
-    printf("num links in: %d\n", getNumLinksInDocumento(documentos[i]));
-    printf("num links out: %d\n", getNumLinksOutDocumento(documentos[i]));
-    printf("\n");
-  }
-  
+  /*========== Debug ==========*/
+  printRBTdocs(documentos);
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
   liberaNoRBTpal(S);
-  liberaDocumentos(documentos);
+  liberaNoRBTdocs(documentos);
   
   return 0;
 }

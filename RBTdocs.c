@@ -1,13 +1,15 @@
 #include "RBTdocs.h"
 
+#include <stdio.h>
+
 struct noDocs { // BRT
     char* chave;
-    Doc** valor;
+    Doc* valor;
     bool cor;
     RBTdocs *esq, *dir;
 };
 
-RBTdocs* criaNoRBTdocs(char* chave, Doc** valor) {
+RBTdocs* criaNoRBTdocs(char* chave, Doc* valor) {
     RBTdocs* no = (RBTdocs*) malloc(sizeof(RBTdocs));
     no->chave = strdup(chave);
     no->valor = valor;
@@ -40,7 +42,7 @@ void trocaCorRBTdocs(RBTdocs* no) {
     no->dir->cor = BLACK;
 }
 
-Doc** buscaRBTdocs(RBTdocs* n, char* chave) {
+Doc* buscaRBTdocs(RBTdocs* n, char* chave) {
     while (n != NULL) {
         int cmp = strcmp(chave, n->chave);
         if      (cmp < 0)   n = n->esq;
@@ -50,7 +52,7 @@ Doc** buscaRBTdocs(RBTdocs* n, char* chave) {
     return NULL;
 }
 
-RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valor) {
+RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc* valor) {
     if (no == NULL) return criaNoRBTdocs(chave, valor);
 
     int cmp = strcmp(chave, no->chave);
@@ -70,11 +72,22 @@ bool ehVermelhoRBTdocs(RBTdocs* no) {
     return no->cor == RED;
 }
 
-void liberaNoRBTdocs(RBTdocs* no) {
+void printRBTdocs(RBTdocs* no) {
     if (no == NULL) return;
 
+    printRBTdocs(no->esq);
+    printf("nome: %s\n", no->chave);
+    printf("page rank: %Lf\n", getPageRankDocumento(no->valor));
+    printf("num links in: %d\n", getNumLinksInDocumento(no->valor));
+    printf("num links out: %d\n", getNumLinksOutDocumento(no->valor));
+    printf("\n");
+    printRBTdocs(no->dir);
+}
+
+void liberaNoRBTdocs(RBTdocs* no) {
+
     free(no->chave);
-    free(no->valor);
+    liberaDocumento(no->valor);
     if (no->esq != NULL) liberaNoRBTdocs(no->esq);
     if (no->dir != NULL) liberaNoRBTdocs(no->dir);
     free(no);

@@ -1,4 +1,6 @@
 #include "documento.h"
+#include "RBTdocs.h"
+
 
 struct documento {
     char* nome;
@@ -101,7 +103,7 @@ void liberaNomeDocumentos(char** nomeDocumentos) {
     free(nomeDocumentos);
 }
 
-Doc** leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
+RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
     /* Criando o diretório onde estão os documentos */
     char dirDocs[100];
     sprintf(dirDocs, "%s/pages", dirEntrada);
@@ -112,36 +114,19 @@ Doc** leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
         exit(1);
     }
 
-    /*
-    Nota:
-    Para criar a tabela (árvore) T, vamos ter que passar por todos os documentos
-    pra conferir se dada palavra está lá, para assim ir criando as linhas da tabela.
-    Portando, não tem problema criar um vetor de documentos aqui.
-    */
-
-    Doc** documentos = (Doc**) malloc((numDocs+1) * sizeof(Doc*)); // +1 por causa do NULL
-
+    RBTdocs* documentos = NULL;
     int i = 0;
     while (nomeDocumentos[i] != NULL) {
-        documentos[i] = criaDocumento(nomeDocumentos[i], numDocs);
+        Doc* documento = criaDocumento(nomeDocumentos[i], numDocs);
+        documentos = insereRBTdocs(documentos, nomeDocumentos[i], documento);
         i++;
     }
-    documentos[i] = NULL; // Para facilitar iteração
 
     fclose(arq);
     return documentos;
 }
 
-void liberaDocumentos(Doc** documentos) {
-    int i = 0;
-    while (documentos[i] != NULL) {
-        liberaDocumento(documentos[i]);
-        i++;
-    }
-    free(documentos);
-}
-
-void linkaDocumentos(Doc** documentos, char* dirEntrada) {
+void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
     /* Criando diretório do arquivo do grafo */
     char dirGrafo[100];
     sprintf(dirGrafo, "%s/graph.txt", dirEntrada);
@@ -155,21 +140,20 @@ void linkaDocumentos(Doc** documentos, char* dirEntrada) {
     char nomeDoc[100], nomeDocLink[100];
     int qtdLinksDoc = 0, i = 0;
 
-    while (documentos[i] != NULL) {
+    while (!feof(arq)) {
         fscanf(arq, "%s", nomeDoc); // Lê o nome do documento
         fscanf(arq, "%d", &qtdLinksDoc); // Lê a quantidade de links do documento
-        setNumLinksOutDocumento(documentos[i], qtdLinksDoc); // Atualiza o número de links do documento
-        documentos[i]->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de links out do documento
+        Doc* doc = buscaRBTdocs(documentos, nomeDoc); // Busca o documento na árvore
+        setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de links do documento
+        doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de links out do documento
         int j = 0;
         while (j < qtdLinksDoc) {
-            Doc* doc = documentos[i];
-            
             // TODO: Lógica de linkar os documentos vem aqui
 
             fscanf(arq, "%s", nomeDocLink); // Lê o nome do documento que o documento aponta
 
             // acessa o documento que o documento aponta
-            Doc* docLink = encontraDocumentoPeloNome(documentos, nomeDocLink);
+            Doc* docLink = buscaRBTdocs(documentos, nomeDocLink);
 
             // adiciona o documento que o documento aponta na lista de links out do documento
             adicionaLinkOutDocumento(doc, docLink, j);
@@ -199,15 +183,4 @@ void adicionaLinkInDocumento(Doc *documento, Doc *documentoLink) {
     }
     setNumLinksInDocumento(documento, numLinksIn + 1);
     documento->linksIn[numLinksIn] = documentoLink;
-}
-
-Doc * encontraDocumentoPeloNome(Doc** documentos, char* nomeDocumento) {
-    int i = 0;
-    while (documentos[i] != NULL) {
-        if (strcmp(getNomeDocumento(documentos[i]), nomeDocumento) == 0) {
-            return documentos[i];
-        }
-        i++;
-    }
-    return NULL;
 }
