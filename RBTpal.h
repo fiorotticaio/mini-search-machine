@@ -19,10 +19,14 @@ RBTpal* rotacionaDirRBTpal(RBTpal* no);
 
 void trocaCorRBTpal(RBTpal* no);
 
+char* buscaRBTPal(RBTpal* n, char* valor);
+
 RBTpal* insereRBTpal(RBTpal* no, int chave, char* valor);
 
 bool ehVermelhoRBTpal(RBTpal* no);
 
 void liberaNoRBTpal(RBTpal* no);
+
+RBTpal* leStopWords(char* dirEntrada);
 
 #endif // RBT_PAL_H
