@@ -147,7 +147,7 @@ void linkaDocumentos(Doc** documentos, char* dirEntrada) {
         fscanf(arq, "%*[^\n]\n"); // Só por enquanto
         int j = 0;
         while (j < qtdLinksDoc) {
-            // TODO: Lógica de linkar os documentos
+            // TODO: Lógica de linkar os documentos vem aqui
             j++;
         }
         i++;
