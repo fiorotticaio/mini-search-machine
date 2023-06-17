@@ -5,12 +5,12 @@
 - Commits em português
 
 ## Ideias
-- [] T : red black tree com chave palavra e valor vetor de documentos (ordenados por PR)
-- [] S : red black tree com chave id e valor a palavra
+- [ ] T : red black tree com chave palavra e valor vetor de documentos (ordenados por PR)
+- [x] S : red black tree com chave id e valor a palavra
 
 - STRUCTS:
-- [X] documento
-- [X] red black tree
-- [] grafo
+- [x] documento
+- [x] red black tree
+- [ ] grafo
 
-- [] ir lendo e processando linha por linha  
+- [ ] ir lendo e processando linha por linha  
