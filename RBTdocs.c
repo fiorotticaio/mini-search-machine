@@ -1,14 +1,14 @@
-#include "RBT.h"
+#include "RBTdocs.h"
 
-struct node { // BRT
+struct noDocs { // BRT
     char* chave;
     Doc** valores;
     bool cor;
-    RBT *esq, *dir;
+    RBTdocs *esq, *dir;
 };
 
-RBT* criaNo(char* chave, Doc** valores) {
-    RBT* no = (RBT*) malloc(sizeof(RBT));
+RBTdocs* criaNo(char* chave, Doc** valores) {
+    RBTdocs* no = (RBTdocs*) malloc(sizeof(RBTdocs));
     no->chave = strdup(chave);
     no->valores = valores;
     no->cor = RED;
@@ -16,8 +16,8 @@ RBT* criaNo(char* chave, Doc** valores) {
     return no;
 }
 
-RBT* rotacionaEsq(RBT* no) {
-    RBT* x = no->dir;
+RBTdocs* rotacionaEsq(RBTdocs* no) {
+    RBTdocs* x = no->dir;
     no->dir = x->esq;
     x->esq = no;
     x->cor = x->esq->cor;
@@ -25,8 +25,8 @@ RBT* rotacionaEsq(RBT* no) {
     return x;
 }
 
-RBT* rotacionaDir(RBT *no) {
-    RBT* x = no->esq;
+RBTdocs* rotacionaDir(RBTdocs *no) {
+    RBTdocs* x = no->esq;
     no->esq = x->dir;
     x->dir = no;
     x->cor = x->dir->cor;
@@ -34,18 +34,18 @@ RBT* rotacionaDir(RBT *no) {
     return x;
 }
 
-void trocaCor(RBT* no) {
+void trocaCor(RBTdocs* no) {
     no->cor = RED;
     no->esq->cor = BLACK;
     no->dir->cor = BLACK;
 }
 
-RBT* insere_RBT(RBT* no, char* chave, Doc** valores) {
+RBTdocs* insere_RBTdocs(RBTdocs* no, char* chave, Doc** valores) {
     if (no == NULL) return criaNo(chave, valores);
 
     int cmp = strcmp(chave, no->chave);
-    if (cmp < 0)        no->esq = insere_RBT(no->esq, chave, valores);
-    else if (cmp > 0)   no->dir = insere_RBT(no->dir, chave, valores);
+    if (cmp < 0)        no->esq = insere_RBTdocs(no->esq, chave, valores);
+    else if (cmp > 0)   no->dir = insere_RBTdocs(no->dir, chave, valores);
     else /* cmp == 0 */ no->valores = valores;
 
     if (ehVermelho(no->dir) && !ehVermelho(no->esq))     no = rotacionaEsq(no);
@@ -55,12 +55,12 @@ RBT* insere_RBT(RBT* no, char* chave, Doc** valores) {
     return no;
 }
 
-bool ehVermelho(RBT* no) {
+bool ehVermelho(RBTdocs* no) {
     if (no == NULL) return BLACK;
     return no->cor == RED;
 }
 
-void liberaNo(RBT* no) {
+void liberaNo(RBTdocs* no) {
     free(no->chave);
     free(no->valores);
     free(no);
