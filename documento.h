@@ -1,6 +1,7 @@
 #ifndef DOCUMENTO_H
 #define DOCUMENTO_H
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,6 +15,10 @@ long double getPageRankDocumento(Doc* documento);
 
 void setPageRankDocumento(Doc* documento, long double pageRank);
 
-void liberaDocumentoDocumento(Doc* documento);
+void liberaDocumento(Doc* documento);
+
+char** leNomeDocumentos(char* dirEntrada);
+
+void liberaNomeDocumentos(char** nomeDocumentos);
 
 #endif // DOCUMENTO_H

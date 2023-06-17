@@ -28,7 +28,46 @@ long double getPageRankDocumento(Doc* documento) {
     return documento->pageRank;
 }
 
-void liberaDocumentoDocumento(Doc* documento) {
+void liberaDocumento(Doc* documento) {
     free(documento->nome);
     free(documento);
+}
+
+char** leNomeDocumentos(char* dirEntrada) {
+    int numDocs = 0, numMaximoDocs = 1000;
+    char** nomeDocs = (char**) malloc(numMaximoDocs * sizeof(char*));
+
+    /* Abrindo o arquivo index.txt */
+    char dirIndex[100];
+    sprintf(dirIndex, "%s/index.txt", dirEntrada);
+    FILE* arq = fopen(dirIndex, "r");
+
+    while (!feof(arq)) { // Enquanto tiver coisa pra ler
+        char nomeDoc[100];
+        fscanf(arq, "%[^\n]\n", nomeDoc); // Lê o nome do documento
+
+        if (numDocs == numMaximoDocs-1) { // Se atingiu o limite (-1 por causa do NULL)
+            numMaximoDocs *= 2; // Dobra o limite
+            nomeDocs = (char**) realloc(nomeDocs, numMaximoDocs * sizeof(char*));
+        }
+
+        nomeDocs[numDocs] = strdup(nomeDoc);
+        numDocs++;
+    }
+
+    /* Realocando o vetor para o tamanho definitivo */
+    nomeDocs = (char**) realloc(nomeDocs, (numDocs+1) * sizeof(char*));
+    nomeDocs[numDocs] = NULL; // Para facilitar iteração
+
+    fclose(arq);
+    return nomeDocs;
+}
+
+void liberaNomeDocumentos(char** nomeDocumentos) {
+    int i = 0;
+    while (nomeDocumentos[i] != NULL) {
+        free(nomeDocumentos[i]);
+        i++;
+    }
+    free(nomeDocumentos);
 }

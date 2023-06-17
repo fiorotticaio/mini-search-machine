@@ -4,14 +4,17 @@ DIR_ENTRADA_2=exemplo2
 # all: clean compile runAll valAll
 all: run1
 
-compile: documento rbt
-	@ gcc -o trab3 	*.o main.c
+compile: documento rbtDocs rbtPal
+	@ gcc -o trab3 documento.o RBTdocs.o RBTpal.o main.c
 
 documento:
 	@ gcc -c documento.c
 
-rbt:
-	@ gcc -c RBT.c
+rbtDocs:
+	@ gcc -c RBTdocs.c
+
+rbtPal:
+	@ gcc -c RBTpal.c
 
 run1: clean compile
 	@ ./trab3 ${DIR_ENTRADA_1}
