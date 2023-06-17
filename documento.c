@@ -42,8 +42,13 @@ char** leNomeDocumentos(char* dirEntrada) {
     sprintf(dirIndex, "%s/index.txt", dirEntrada);
     FILE* arq = fopen(dirIndex, "r");
 
+    if (arq == NULL) {
+        printf("Erro ao abrir arquivo no diretorio: %s\n", dirIndex);
+        exit(1);
+    }
+
     while (!feof(arq)) { // Enquanto tiver coisa pra ler
-        char nomeDoc[100];
+        char nomeDoc[100]; // Variável auxiliar para leitura
         fscanf(arq, "%[^\n]\n", nomeDoc); // Lê o nome do documento
 
         if (numDocs == numMaximoDocs-1) { // Se atingiu o limite (-1 por causa do NULL)
