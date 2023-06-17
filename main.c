@@ -16,21 +16,21 @@ int main(int argc, char** argv) {
 
 
   /*========== Leitura dos dados de entrada ==========*/
-  char** nomeDocumentos = leNomeDocumentos(argv[1]);
+  int qtdDocs = 0;
+  char** nomeDocumentos = leNomeDocumentos(argv[1], &qtdDocs);
   RBTpal* S = leStopWords(argv[1]);
+  Doc** documentos = leDocumentos(nomeDocumentos, qtdDocs, argv[1]);
 
-  /* Debug */
-  // char* palBuscada = buscaRBTPal(S, "its");
-  // if (palBuscada != NULL) {
-  //   printf("Palavra buscada: %s\n", palBuscada);
-  // } else {
-  //   printf("Palavra buscada não encontrada\n");
-  // } 
+  // for (int i = 0; documentos[i] != NULL; i++) {
+  //   printf("%s\n", getNomeDocumento(documentos[i]));
+  //   printf("%Lf\n", getPageRankDocumento(documentos[i]));
+  // }
   
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
   liberaNoRBTpal(S);
+  liberaDocumentos(documentos);
   
   return 0;
 }
