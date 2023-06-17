@@ -20,11 +20,15 @@ int main(int argc, char** argv) {
   char** nomeDocumentos = leNomeDocumentos(argv[1], &qtdDocs);
   RBTpal* S = leStopWords(argv[1]);
   Doc** documentos = leDocumentos(nomeDocumentos, qtdDocs, argv[1]);
+  linkaDocumentos(documentos, argv[1]);
 
-  // for (int i = 0; documentos[i] != NULL; i++) {
-  //   printf("%s\n", getNomeDocumento(documentos[i]));
-  //   printf("%Lf\n", getPageRankDocumento(documentos[i]));
-  // }
+  /* Debug */
+  for (int i = 0; documentos[i] != NULL; i++) {
+    printf("nome: %s\n", getNomeDocumento(documentos[i]));
+    printf("page rank: %Lf\n", getPageRankDocumento(documentos[i]));
+    printf("num link: %d\n", getNumLinksDocumento(documentos[i]));
+    printf("\n");
+  }
   
 
   /*========== Liberação da memória ==========*/
