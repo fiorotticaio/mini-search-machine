@@ -11,7 +11,7 @@
 
 typedef struct noDocs RBTdocs;
 
-RBTdocs* criaNoRBTdocs(char* chave, Doc** valores);
+RBTdocs* criaNoRBTdocs(char* chave, Doc** valor);
 
 RBTdocs* rotacionaEsqRBTdocs(RBTdocs* no);
 
@@ -19,7 +19,9 @@ RBTdocs* rotacionaDirRBTdocs(RBTdocs* no);
 
 void trocaCorRBTdocs(RBTdocs* no);
 
-RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valores);
+Doc** buscaRBTdocs(RBTdocs* n, char* chave);
+
+RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valor);
 
 bool ehVermelhoRBTdocs(RBTdocs* no);
 

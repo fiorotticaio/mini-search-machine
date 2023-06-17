@@ -2,15 +2,15 @@
 
 struct noDocs { // BRT
     char* chave;
-    Doc** valores;
+    Doc** valor;
     bool cor;
     RBTdocs *esq, *dir;
 };
 
-RBTdocs* criaNoRBTdocs(char* chave, Doc** valores) {
+RBTdocs* criaNoRBTdocs(char* chave, Doc** valor) {
     RBTdocs* no = (RBTdocs*) malloc(sizeof(RBTdocs));
     no->chave = strdup(chave);
-    no->valores = valores;
+    no->valor = valor;
     no->cor = RED;
     no->esq = no->dir = NULL;
     return no;
@@ -40,13 +40,23 @@ void trocaCorRBTdocs(RBTdocs* no) {
     no->dir->cor = BLACK;
 }
 
-RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valores) {
-    if (no == NULL) return criaNoRBTdocs(chave, valores);
+Doc** buscaRBTdocs(RBTdocs* n, char* chave) {
+    while (n != NULL) {
+        int cmp = strcmp(chave, n->chave);
+        if      (cmp < 0)   n = n->esq;
+        else if (cmp > 0)   n = n->dir;
+        else /* cmp == 0 */ return n->valor;
+    }
+    return NULL;
+}
+
+RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc** valor) {
+    if (no == NULL) return criaNoRBTdocs(chave, valor);
 
     int cmp = strcmp(chave, no->chave);
-    if (cmp < 0)        no->esq = insereRBTdocs(no->esq, chave, valores);
-    else if (cmp > 0)   no->dir = insereRBTdocs(no->dir, chave, valores);
-    else /* cmp == 0 */ no->valores = valores;
+    if      (cmp < 0)   no->esq = insereRBTdocs(no->esq, chave, valor);
+    else if (cmp > 0)   no->dir = insereRBTdocs(no->dir, chave, valor);
+    else /* cmp == 0 */ no->valor = valor;
 
     if (ehVermelhoRBTdocs(no->dir) && !ehVermelhoRBTdocs(no->esq))     no = rotacionaEsqRBTdocs(no);
     if (ehVermelhoRBTdocs(no->esq) && ehVermelhoRBTdocs(no->esq->esq)) no = rotacionaDirRBTdocs(no);
@@ -61,7 +71,11 @@ bool ehVermelhoRBTdocs(RBTdocs* no) {
 }
 
 void liberaNoRBTdocs(RBTdocs* no) {
+    if (no == NULL) return;
+
     free(no->chave);
-    free(no->valores);
+    free(no->valor);
+    if (no->esq != NULL) liberaNoRBTdocs(no->esq);
+    if (no->dir != NULL) liberaNoRBTdocs(no->dir);
     free(no);
 }
