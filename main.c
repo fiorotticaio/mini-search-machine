@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "documento.h"
+#include "RBTpal.h"
 
 int main(int argc, char** argv) {
   /**
@@ -14,16 +16,21 @@ int main(int argc, char** argv) {
 
 
   /*========== Leitura dos dados de entrada ==========*/
-  printf("Diretorio onde estao os arquivos de entrada: %s\n", argv[1]);
+  char** nomeDocumentos = leNomeDocumentos(argv[1]);
+  RBTpal* S = leStopWords(argv[1]);
 
+  /* Debug */
+  // char* palBuscada = buscaRBTPal(S, "its");
+  // if (palBuscada != NULL) {
+  //   printf("Palavra buscada: %s\n", palBuscada);
+  // } else {
+  //   printf("Palavra buscada não encontrada\n");
+  // } 
+  
 
-
-
-
-
-
-
-
-
+  /*========== Liberação da memória ==========*/
+  liberaNomeDocumentos(nomeDocumentos);
+  liberaNoRBTpal(S);
+  
   return 0;
 }
