@@ -1,6 +1,14 @@
 #ifndef RBT_H
 #define RBT_H
 
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include "documento.h"
+
+#define RED true
+#define BLACK false
+
 typedef struct node RBT;
 
 #include "RBT.h"
@@ -13,27 +21,26 @@ typedef struct node RBT;
 #define RED true
 #define BLACK false
 
-struct node // RBT
-{
-    char *chave;
-    Doc **valores;
-    int numValores;
-    bool cor;
-    RBT *esq, *dir;
-};
+// struct node {
+//     char* chave;
+//     Doc** valores;
+//     int numValores;
+//     bool cor;
+//     RBT *esq, *dir;
+// };
 
-RBT *criaNo(char *chave, Doc **valores);
+RBT* criaNo(char* chave, Doc** valores);
 
-RBT *rotacionaEsq(RBT *no);
+RBT* rotacionaEsq(RBT* no);
 
-RBT *rotacionaDir(RBT *no);
+RBT* rotacionaDir(RBT* no);
 
-void trocaCor(RBT *no);
+void trocaCor(RBT* no);
 
-RBT *insere_RBT(RBT *no, char *chave, Doc **valores);
+RBT* insere_RBT(RBT* no, char* chave, Doc** valores);
 
-bool ehVermelho(RBT *no);
+bool ehVermelho(RBT* no);
 
-void liberaNo(RBT *no);
+void liberaNo(RBT* no);
 
 #endif // RBT_H
