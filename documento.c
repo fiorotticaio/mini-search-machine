@@ -160,6 +160,7 @@ void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
         Doc* doc = buscaRBTdocs(documentos, nomeDoc); // Busca o documento na árvore
         setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de links out do documento
         doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de links out do documento
+        // FIXME: erro aqui
 
         int i = 0;
         while (i < qtdLinksDoc) {
