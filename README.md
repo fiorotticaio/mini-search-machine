@@ -15,4 +15,4 @@
 - [ ] ir lendo e processando linha por linha  
 
 ## Bugs
-- [ ] falta um free (alocado em "leDocumentos")
+- [ ] falta um free (alocado em "linkaDocumentos")
