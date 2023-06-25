@@ -76,16 +76,12 @@ void printRBTdocs(RBTdocs* no) {
     if (no == NULL) return;
 
     printRBTdocs(no->esq);
-    printf("nome: %s\n", no->chave);
-    printf("page rank: %Lf\n", getPageRankDocumento(no->valor));
-    printf("num links in: %d\n", getNumLinksInDocumento(no->valor));
-    printf("num links out: %d\n", getNumLinksOutDocumento(no->valor));
-    printf("\n");
+    imprimeDocumento(no->valor);
+    printf("\n\n");
     printRBTdocs(no->dir);
 }
 
 void liberaNoRBTdocs(RBTdocs* no) {
-
     free(no->chave);
     liberaDocumento(no->valor);
     if (no->esq != NULL) liberaNoRBTdocs(no->esq);
