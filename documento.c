@@ -1,10 +1,9 @@
 #include "documento.h"
 #include "RBTdocs.h"
 
-
 struct documento {
     char* nome;
-    long double pageRank;
+    long double pageRank[TAM_PG];
     Doc** linksOut ; // Lista de documentos para as quais o documento aponta
     Doc** linksIn; // Lista de documentos que apontam para o documento
     int numLinksIn; // Número de links que o documento recebe
@@ -14,7 +13,13 @@ struct documento {
 Doc* criaDocumento(char* nome, int numTotalDocs) {
     Doc *documento = (Doc*) malloc(sizeof(Doc));
     documento->nome = strdup(nome);
-    documento->pageRank = 1.0 / numTotalDocs;
+
+    documento->pageRank[0] = 1.0 / numTotalDocs; // Inicializa o page rank com 1/n
+    int i = 1;
+    for (i = 1; i < TAM_PG; i++) {
+        documento->pageRank[i] = -1; // Inicializando com valor inválido
+    }
+
     documento->numLinksIn = 0;
     documento->numLinksOut = 0;
     documento->linksIn = NULL;
@@ -27,8 +32,8 @@ char* getNomeDocumento(Doc* documento) {
     return documento->nome;
 }
 
-void setPageRankDocumento(Doc* documento, long double pageRank) {
-    documento->pageRank = pageRank;
+void setPageRankDocumento(Doc* documento, long double pageRank, int pos) {
+    documento->pageRank[pos] = pageRank;
 }
 
 int getNumLinksInDocumento(Doc* documento) {
@@ -47,8 +52,8 @@ void setNumLinksOutDocumento(Doc* documento, int numLinksOut) {
     documento->numLinksOut = numLinksOut;
 }
 
-long double getPageRankDocumento(Doc* documento) {
-    return documento->pageRank;
+long double getPageRankDocumento(Doc* documento, int pos) {
+    return documento->pageRank[pos];
 }
 
 void liberaDocumento(Doc* documento) {    
@@ -58,9 +63,9 @@ void liberaDocumento(Doc* documento) {
     free(documento);
 }
 
-void imprimeDocumento(Doc* doc) {
+void imprimeDocumento(Doc* doc, int ultimaPosPageRank) {
     printf("nome: %s\n", doc->nome);
-    printf("page rank: %Lf\n", doc->pageRank);
+    printf("page rank: %.5Lf\n", doc->pageRank[ultimaPosPageRank]);    
     printf("num links out: %d\n", doc->numLinksOut);
     for (int i = 0; i < doc->numLinksOut; i++) {
         printf("\tlink out %d: %s\n", i, doc->linksOut[i]->nome);
@@ -194,4 +199,28 @@ void adicionaLinkInDocumento(Doc *documento, Doc *documentoLink) {
     }
     setNumLinksInDocumento(documento, numLinksIn + 1);
     documento->linksIn[numLinksIn] = documentoLink;
+}
+
+void calculaPageRankDocumento(Doc* doc, int numDocs, int k) { // Diretamente da formula
+    if (doc->numLinksOut != 0) {
+        long double parcela = (long double) (1 - ALFA_PR) / numDocs;
+        long double somatorio = 0.0;
+        int j = 0;
+        for (j = 0; j < doc->numLinksIn; j++) {
+            Doc* docLink = doc->linksIn[j];
+            somatorio += (long double) docLink->pageRank[k-1] / docLink->numLinksOut;
+        }
+        doc->pageRank[k] = parcela + (ALFA_PR * somatorio);
+
+    } else { // doc->numLinksOut == 0
+        long double parcela1 = (long double) (1 - ALFA_PR) / numDocs;
+        long double parcela2 = ALFA_PR * doc->pageRank[k-1];
+        long double somatorio = 0.0;
+        int j = 0;
+        for (j = 0; j < doc->numLinksIn; j++) {
+            Doc* docLink = doc->linksIn[j];
+            somatorio += (long double) docLink->pageRank[k-1] / docLink->numLinksOut;
+        }
+        doc->pageRank[k] = parcela1 + parcela2 + (ALFA_PR * somatorio);
+    }
 }

@@ -26,8 +26,10 @@ RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc* valor);
 
 bool ehVermelhoRBTdocs(RBTdocs* no);
 
-void printRBTdocs(RBTdocs* no);
+void printRBTdocs(RBTdocs* no, int ultimaPosPageRank);
 
 void liberaNoRBTdocs(RBTdocs* no);
+
+int calculaPageRankRBTdocs(RBTdocs* no, int numDocs);
 
 #endif // RBT_DOCS_H

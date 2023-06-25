@@ -72,13 +72,13 @@ bool ehVermelhoRBTdocs(RBTdocs* no) {
     return no->cor == RED;
 }
 
-void printRBTdocs(RBTdocs* no) {
+void printRBTdocs(RBTdocs* no, int ultimaPosPageRank) {
     if (no == NULL) return;
 
-    printRBTdocs(no->esq);
-    imprimeDocumento(no->valor);
+    printRBTdocs(no->esq, ultimaPosPageRank);
+    imprimeDocumento(no->valor, ultimaPosPageRank);
     printf("\n\n");
-    printRBTdocs(no->dir);
+    printRBTdocs(no->dir, ultimaPosPageRank);
 }
 
 void liberaNoRBTdocs(RBTdocs* no) {
@@ -87,4 +87,42 @@ void liberaNoRBTdocs(RBTdocs* no) {
     if (no->esq != NULL) liberaNoRBTdocs(no->esq);
     if (no->dir != NULL) liberaNoRBTdocs(no->dir);
     free(no);
+}
+
+static long double getDifPageRank(RBTdocs* no, int k) { // Função resursiva
+    if (no == NULL) return 0;
+
+    long double somatorio = 0.0;
+    somatorio += getDifPageRank(no->esq, k);
+
+    /* Nó atual */
+    long double dif = (getPageRankDocumento(no->valor, k) - getPageRankDocumento(no->valor, k-1));
+    if (dif < 0) dif *= -1; // Pegar o módulo
+    somatorio += dif;
+
+    somatorio += getDifPageRank(no->dir, k);
+    return somatorio;
+}
+
+static int terminouCalculoPageRank(RBTdocs* no, int numDocs, int k) {
+    long double E = 0.0, somatorio = 0.0;
+    somatorio = getDifPageRank(no, k);
+    E = (long double) somatorio / numDocs;
+    return E < DIF_LIMITE_PR;
+}
+
+static void calcPG(RBTdocs* no, int numDocs, int k) { // Função resursiva
+    if (no == NULL) return;
+    calcPG(no->esq, numDocs, k);
+    calculaPageRankDocumento(no->valor, numDocs, k); // Nó atual
+    calcPG(no->dir, numDocs, k);
+}
+
+int calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
+    if (no == NULL) return -1;
+    int k = 1; // A passagem 0 já foi feita na criação do documento
+    do {
+        calcPG(no, numDocs, k); // Calcula o page rank de todos os docs para a passagem k
+    } while (!terminouCalculoPageRank(no, numDocs, k++));
+    return k-1; // Retorna a última posição válida do page rank 
 }
