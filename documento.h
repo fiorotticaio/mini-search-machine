@@ -25,20 +25,19 @@ int getNumLinksOutDocumento(Doc* documento);
 
 void setNumLinksOutDocumento(Doc* documento, int numLinks);
 
-Doc* encontraDocumentoPeloNome(Doc** documentos, char* nome);
-
 void adicionaLinkOutDocumento(Doc* documento, Doc* link, int posicao);
 
 void adicionaLinkInDocumento(Doc* documento, Doc* link);
 
 void liberaDocumento(Doc* documento);
 
+void imprimeDocumento(Doc* doc);
+
 char** leNomeDocumentos(char* dirEntrada, int* qtdDocs);
 
 void liberaNomeDocumentos(char** nomeDocumentos);
 
 RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada);
-
 
 void linkaDocumentos(RBTdocs* documentos, char* dirEntrada);
 

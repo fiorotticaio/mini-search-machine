@@ -51,11 +51,24 @@ long double getPageRankDocumento(Doc* documento) {
     return documento->pageRank;
 }
 
-void liberaDocumento(Doc* documento) {
+void liberaDocumento(Doc* documento) {    
     free(documento->nome);
     free(documento->linksIn);
     free(documento->linksOut);
     free(documento);
+}
+
+void imprimeDocumento(Doc* doc) {
+    printf("nome: %s\n", doc->nome);
+    printf("page rank: %Lf\n", doc->pageRank);
+    printf("num links out: %d\n", doc->numLinksOut);
+    for (int i = 0; i < doc->numLinksOut; i++) {
+        printf("\tlink out %d: %s\n", i, doc->linksOut[i]->nome);
+    }
+    printf("num links in: %d\n", doc->numLinksIn);
+    for (int i = 0; i < doc->numLinksIn; i++) {
+        printf("\tlink in %d: %s\n", i, doc->linksIn[i]->nome);
+    }
 }
 
 char** leNomeDocumentos(char* dirEntrada, int* qtdDocs) {
@@ -138,45 +151,42 @@ void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
     }
 
     char nomeDoc[100], nomeDocLink[100];
-    int qtdLinksDoc = 0, i = 0;
+    int qtdLinksDoc = 0;
 
     while (!feof(arq)) {
         fscanf(arq, "%s", nomeDoc); // Lê o nome do documento
         fscanf(arq, "%d", &qtdLinksDoc); // Lê a quantidade de links do documento
-        Doc* doc = buscaRBTdocs(documentos, nomeDoc); // Busca o documento na árvore
-        setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de links do documento
-        doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de links out do documento
-        int j = 0;
-        while (j < qtdLinksDoc) {
-            // TODO: Lógica de linkar os documentos vem aqui
 
+        Doc* doc = buscaRBTdocs(documentos, nomeDoc); // Busca o documento na árvore
+        setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de links out do documento
+        doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de links out do documento
+
+        int i = 0;
+        while (i < qtdLinksDoc) {
             fscanf(arq, "%s", nomeDocLink); // Lê o nome do documento que o documento aponta
 
-            // acessa o documento que o documento aponta
+            /* Acessa o documento que o documento aponta */ 
             Doc* docLink = buscaRBTdocs(documentos, nomeDocLink);
 
-            // adiciona o documento que o documento aponta na lista de links out do documento
-            adicionaLinkOutDocumento(doc, docLink, j);
+            /* Adiciona o documento que o documento aponta na lista de links out do documento */
+            adicionaLinkOutDocumento(doc, docLink, i);
 
-            // adiciona o documento na lista de links in do documento que o documento aponta
+            /* Adiciona o documento na lista de links in do documento que o documento aponta */
             adicionaLinkInDocumento(docLink, doc);
 
-            j++;
+            i++;
         }
-        i++;
     }
-
     fclose(arq);
 }
 
-void adicionaLinkOutDocumento(Doc *documento, Doc *documentoLink, int posicao) {
+void adicionaLinkOutDocumento(Doc* documento, Doc* documentoLink, int posicao) {
     documento->linksOut[posicao] = documentoLink;
 }
 
-
 void adicionaLinkInDocumento(Doc *documento, Doc *documentoLink) {
     int numLinksIn = getNumLinksInDocumento(documento);
-    if(numLinksIn == 0) {
+    if (numLinksIn == 0) {
         documento->linksIn = (Doc**) malloc(sizeof(Doc*));
     } else {
         documento->linksIn = (Doc**) realloc(documento->linksIn, (numLinksIn + 1) * sizeof(Doc*));
