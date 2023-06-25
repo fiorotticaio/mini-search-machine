@@ -5,14 +5,13 @@
 - Commits em português
 
 ## Ideias
-- [ ] T : red black tree com chave palavra e valor vetor de documentos (ordenados por PR)
 - [x] S : red black tree com chave id e valor a palavra
-
-- STRUCTS:
-- [x] documento
-- [x] red black tree
-
-- [ ] ir lendo e processando linha por linha  
+- [x] struct documento
+- [x] struct's red black tree
+- [x] calcular page rank
+- [ ] T : red black tree com chave palavra e valor vetor de documentos (ordenados por PR)
+- [ ] ir lendo e processando linha por linha da entrada padrão
 
 ## Bugs
 - [ ] falta um free (alocado em "linkaDocumentos")
+  - Ele da erro nos casos exemplos 1 e 2, mas no 0 não
