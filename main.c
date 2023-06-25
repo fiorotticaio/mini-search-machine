@@ -23,8 +23,14 @@ int main(int argc, char** argv) {
   RBTdocs* documentos = leDocumentos(nomeDocumentos, qtdDocs, argv[1]);
   linkaDocumentos(documentos, argv[1]);
 
+
+  /*========== Cálculo do page rank ==========*/
+  int ultimaPosPageRank = calculaPageRankRBTdocs(documentos, qtdDocs);
+
+
   /*========== Debug ==========*/
-  printRBTdocs(documentos);
+  printRBTdocs(documentos, ultimaPosPageRank);
+
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
