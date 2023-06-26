@@ -17,4 +17,4 @@
   - Ele da erro nos casos exemplos 1 e 2, mas no 0 não
 
 ## MELHORIAS
-- [ ] O vetor page rank está estático. Fazer dinâmico?
+- [ ] O vetor page rank está estático. Fazer dinâmico? (acho que não precisa)
