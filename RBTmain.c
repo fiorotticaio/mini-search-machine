@@ -9,6 +9,11 @@ struct noMain { // BRT
     RBTmain *esq, *dir;
 };
 
+int comparaPageRank(const void* a, const void* b) {
+    //TODO: implementar
+}
+
+
 RBTmain* criaNoRBTmain(char* chave, Doc* valor) {
     RBTmain* no = (RBTmain*) malloc(sizeof(RBTmain));
     Doc** docs = (Doc**) malloc(sizeof(Doc*));
@@ -109,6 +114,18 @@ void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, R
 
 
     if(getDir(documentos) != NULL) criaRBTpesquisa(getDir(documentos), stopWords, dirEntrada, T);
+}
+
+void ordenaValuesPorPageRank(RBTmain** T){
+    if (*T == NULL) return;
+
+    if((*T)->esq != NULL) ordenaValuesPorPageRank(&(*T)->esq);
+
+    Doc** docs = (*T)->valor;
+    int nDocs = (*T)->nDocs;
+    qsort(docs, nDocs, sizeof(Doc*), comparaPageRank);
+
+    if((*T)->dir != NULL) ordenaValuesPorPageRank(&(*T)->dir);
 }
 
 bool ehVermelhoRBTmain(RBTmain* no) {

@@ -28,6 +28,8 @@ RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor);
 
 void criaRBTpesquisa(RBTdocs* docs, RBTpal* stopWords, char* dirEntrada, RBTmain** T);
 
+void ordenaValuesPorPageRank(RBTmain** T);
+
 bool ehVermelhoRBTmain(RBTmain* no);
 
 void printRBTmain(RBTmain* no);

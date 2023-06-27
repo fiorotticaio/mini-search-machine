@@ -28,8 +28,10 @@ int main(int argc, char** argv) {
   /*========== Cálculo do page rank ==========*/
   int ultimaPosPageRank = calculaPageRankRBTdocs(documentos, qtdDocs);
 
+  /*================ Criação da árvore com as palavras ================*/
   RBTmain* T = NULL;
   criaRBTpesquisa(documentos,  S, argv[1], &T);
+  //TODO: ordenaValuesPorPageRank(&T);
 
 
   /*========== Debug ==========*/
