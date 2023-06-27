@@ -4,14 +4,17 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "documento.h"
+#include "RBTpal.h"
+#include "RBTdocs.h"
 
 #define RED true
 #define BLACK false
 
 typedef struct noMain RBTmain;
 
-RBTmain* criaNoRBTmain(char* chave, Doc** valor);
+RBTmain* criaNoRBTmain(char* chave, Doc* valor);
 
 RBTmain* rotacionaEsqRBTmain(RBTmain* no);
 
@@ -21,9 +24,13 @@ void trocaCorRBTmain(RBTmain* no);
 
 Doc** buscaRBTmain(RBTmain* n, char* chave);
 
-RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc** valor);
+RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor);
+
+void criaRBTpesquisa(RBTdocs* docs, RBTpal* stopWords, char* dirEntrada, RBTmain** T);
 
 bool ehVermelhoRBTmain(RBTmain* no);
+
+void printRBTmain(RBTmain* no);
 
 void liberaNoRBTmain(RBTmain* no);
 

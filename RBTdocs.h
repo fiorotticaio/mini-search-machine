@@ -30,6 +30,14 @@ void printRBTdocs(RBTdocs* no, int ultimaPosPageRank);
 
 void liberaNoRBTdocs(RBTdocs* no);
 
+RBTdocs* getEsq(RBTdocs* no);
+
+RBTdocs* getDir(RBTdocs* no);
+
+Doc* getValor(RBTdocs* no);
+
+char* getChave(RBTdocs* no);
+
 int calculaPageRankRBTdocs(RBTdocs* no, int numDocs);
 
 #endif // RBT_DOCS_H

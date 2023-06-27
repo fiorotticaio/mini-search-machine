@@ -89,6 +89,22 @@ void liberaNoRBTdocs(RBTdocs* no) {
     free(no);
 }
 
+RBTdocs* getEsq(RBTdocs* no){
+    return no->esq;
+}
+
+RBTdocs* getDir(RBTdocs* no){
+    return no->dir;
+}
+
+Doc* getValor(RBTdocs* no){
+    return no->valor;
+}
+
+char* getChave(RBTdocs* no){
+    return no->chave;
+}
+
 static long double getDifPageRank(RBTdocs* no, int k) { // Função resursiva
     if (no == NULL) return 0;
 
@@ -120,9 +136,9 @@ static void calcPG(RBTdocs* no, int numDocs, int k) { // Função resursiva
 
 int calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
     if (no == NULL) return -1;
-    int k = 1; // A passagem 0 já foi feita na criação do documento
+    int k = 1; // A iteração 0 já foi feita na criação do documento
     do {
-        calcPG(no, numDocs, k); // Calcula o page rank de todos os docs para a passagem k
+        calcPG(no, numDocs, k); // Calcula o page rank de todos os docs para a iteração k
     } while (!terminouCalculoPageRank(no, numDocs, k++));
     return k-1; // Retorna a última posição válida do page rank 
 }
