@@ -26,17 +26,32 @@ int main(int argc, char** argv) {
 
 
   /*========== Cálculo do page rank ==========*/
-  int ultimaPosPageRank = calculaPageRankRBTdocs(documentos, qtdDocs);
+  calculaPageRankRBTdocs(documentos, qtdDocs);
 
   /*================ Criação da árvore com as palavras ================*/
   RBTmain* T = NULL;
   criaRBTpesquisa(documentos,  S, argv[1], &T);
-  //TODO: ordenaValuesPorPageRank(&T);
+  ordenaValuesPorPageRank(&T);
 
 
   /*========== Debug ==========*/
-  //printRBTdocs(documentos, ultimaPosPageRank);
-  //printRBTmain(T);
+  printRBTdocs(documentos);
+  printRBTmain(T);
+  
+  /*========= Testes de Pesquisa ============*/
+  // SÓ FUNCIONAM PARA O EXEMPLO 0 (É SÓ PRA TESTAR MESMO)
+
+  printf("\n\nTESTANDO PESQUISA:\n\n buscando abacate\n");
+  
+  Doc** ex1 = buscaRBTmain(T, "aBaCaTe");
+  printf("%s: %Lf\n", getNomeDocumento(ex1[0]), getLastPageRankDocumento(ex1[0]));   //pegando o primeiro documento só pra testar.
+  
+  printf("\n Buscando maca\n");
+
+  Doc** ex2 = buscaRBTmain(T, "Maca");
+  printf("%s: %Lf\n", getNomeDocumento(ex2[0]), getLastPageRankDocumento(ex2[0]));
+
+
 
 
   /*========== Liberação da memória ==========*/

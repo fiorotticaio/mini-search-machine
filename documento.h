@@ -19,6 +19,8 @@ char *getNomeDocumento(Doc* documento);
 
 long double getPageRankDocumento(Doc* documento, int pos);
 
+long double getLastPageRankDocumento(Doc* documento);
+
 void setPageRankDocumento(Doc* documento, long double pageRank, int pos);
 
 int getNumLinksInDocumento(Doc* documento);
@@ -29,13 +31,17 @@ int getNumLinksOutDocumento(Doc* documento);
 
 void setNumLinksOutDocumento(Doc* documento, int numLinks);
 
+void setUltimaPosPageRankDocumento(Doc* documento, int ultimaPosPageRank);
+
+int getUltimaPosPageRankDocumento(Doc* documento);
+
 void adicionaLinkOutDocumento(Doc* documento, Doc* link, int posicao);
 
 void adicionaLinkInDocumento(Doc* documento, Doc* link);
 
 void liberaDocumento(Doc* documento);
 
-void imprimeDocumento(Doc* doc, int ultimaPosPageRank);
+void imprimeDocumento(Doc* doc);
 
 char** leNomeDocumentos(char* dirEntrada, int* qtdDocs);
 

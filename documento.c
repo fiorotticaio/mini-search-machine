@@ -8,6 +8,7 @@ struct documento {
     Doc** linksIn; // Lista de documentos que apontam para o documento
     int numLinksIn; // Número de links que o documento recebe
     int numLinksOut; // Número de links que apontam para o documento
+    int ultimaPosPageRank; // Última posição do vetor de page rank que foi calculada
 };
 
 Doc* criaDocumento(char* nome, int numTotalDocs) {
@@ -24,6 +25,7 @@ Doc* criaDocumento(char* nome, int numTotalDocs) {
     documento->numLinksOut = 0;
     documento->linksIn = NULL;
     documento->linksOut = NULL;
+    documento->ultimaPosPageRank = 0;
 
     return documento;
 }
@@ -34,6 +36,10 @@ char* getNomeDocumento(Doc* documento) {
 
 void setPageRankDocumento(Doc* documento, long double pageRank, int pos) {
     documento->pageRank[pos] = pageRank;
+}
+
+long double getLastPageRankDocumento(Doc* documento){
+    return documento->pageRank[documento->ultimaPosPageRank];
 }
 
 int getNumLinksInDocumento(Doc* documento) {
@@ -52,6 +58,14 @@ void setNumLinksOutDocumento(Doc* documento, int numLinksOut) {
     documento->numLinksOut = numLinksOut;
 }
 
+void setUltimaPosPageRankDocumento(Doc* documento, int ultimaPosPageRank){
+    documento->ultimaPosPageRank = ultimaPosPageRank;
+}
+
+int getUltimaPosPageRankDocumento(Doc* documento){
+    return documento->ultimaPosPageRank;
+}
+
 long double getPageRankDocumento(Doc* documento, int pos) {
     return documento->pageRank[pos];
 }
@@ -63,9 +77,9 @@ void liberaDocumento(Doc* documento) {
     free(documento);
 }
 
-void imprimeDocumento(Doc* doc, int ultimaPosPageRank) {
+void imprimeDocumento(Doc* doc) {
     printf("nome: %s\n", doc->nome);
-    printf("page rank: %.5Lf\n", doc->pageRank[ultimaPosPageRank]);    
+    printf("page rank: %.5Lf\n", doc->pageRank[doc->ultimaPosPageRank]);    
     printf("num links out: %d\n", doc->numLinksOut);
     for (int i = 0; i < doc->numLinksOut; i++) {
         printf("\tlink out %d: %s\n", i, doc->linksOut[i]->nome);
@@ -74,6 +88,7 @@ void imprimeDocumento(Doc* doc, int ultimaPosPageRank) {
     for (int i = 0; i < doc->numLinksIn; i++) {
         printf("\tlink in %d: %s\n", i, doc->linksIn[i]->nome);
     }
+    printf("ultima posicao page rank: %d\n", doc->ultimaPosPageRank);
 }
 
 char** leNomeDocumentos(char* dirEntrada, int* qtdDocs) {

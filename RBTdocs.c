@@ -72,13 +72,13 @@ bool ehVermelhoRBTdocs(RBTdocs* no) {
     return no->cor == RED;
 }
 
-void printRBTdocs(RBTdocs* no, int ultimaPosPageRank) {
+void printRBTdocs(RBTdocs* no) {
     if (no == NULL) return;
 
-    printRBTdocs(no->esq, ultimaPosPageRank);
-    imprimeDocumento(no->valor, ultimaPosPageRank);
+    printRBTdocs(no->esq);
+    imprimeDocumento(no->valor);
     printf("\n\n");
-    printRBTdocs(no->dir, ultimaPosPageRank);
+    printRBTdocs(no->dir);
 }
 
 void liberaNoRBTdocs(RBTdocs* no) {
@@ -130,15 +130,15 @@ static int terminouCalculoPageRank(RBTdocs* no, int numDocs, int k) {
 static void calcPG(RBTdocs* no, int numDocs, int k) { // Função resursiva
     if (no == NULL) return;
     calcPG(no->esq, numDocs, k);
+    setUltimaPosPageRankDocumento(no->valor, k); // Atualiza a última posição válida do page rank
     calculaPageRankDocumento(no->valor, numDocs, k); // Nó atual
     calcPG(no->dir, numDocs, k);
 }
 
-int calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
-    if (no == NULL) return -1;
+void calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
+    if (no == NULL) return;
     int k = 1; // A iteração 0 já foi feita na criação do documento
     do {
         calcPG(no, numDocs, k); // Calcula o page rank de todos os docs para a iteração k
     } while (!terminouCalculoPageRank(no, numDocs, k++));
-    return k-1; // Retorna a última posição válida do page rank 
 }

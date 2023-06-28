@@ -32,7 +32,7 @@ run2: clean compile
 runAll: run0 run1 run2
 
 val0: clean compile
-	@ valgrind --leak-check=full ./trab3 ${DIR_ENTRADA_0}
+	@ valgrind --leak-check=full --show-leak-kinds=all ./trab3 ${DIR_ENTRADA_0}
 
 val1: clean compile
 	@ valgrind --leak-check=full ./trab3 ${DIR_ENTRADA_1}

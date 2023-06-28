@@ -10,7 +10,11 @@ struct noMain { // BRT
 };
 
 int comparaPageRank(const void* a, const void* b) {
-    //TODO: implementar
+    Doc* docA = *(Doc**) a;
+    Doc* docB = *(Doc**) b;
+    if (getLastPageRankDocumento(docA)> getLastPageRankDocumento(docB)) return -1;
+    if (getLastPageRankDocumento(docA)< getLastPageRankDocumento(docB)) return 1;
+    return 0;
 }
 
 
@@ -51,12 +55,21 @@ void trocaCorRBTmain(RBTmain* no) {
 }
 
 Doc** buscaRBTmain(RBTmain* n, char* chave) {
+    char* chave_lower = strdup(chave);  // Cria uma cópia da chave
+
+    for (int i = 0; chave_lower[i] != '\0'; i++) {
+        chave_lower[i] = tolower(chave_lower[i]);  // Converte para minúsculo
+    }
     while (n != NULL) {
-        int cmp = strcmp(chave, n->chave);
+        int cmp = strcmp(chave_lower, n->chave);
         if      (cmp < 0)   n = n->esq;
         else if (cmp > 0)   n = n->dir;
-        else /* cmp == 0 */ return n->valor;
+        else {
+            free(chave_lower);
+            return n->valor;
+        }
     }
+    free(chave_lower);
     return NULL;
 }
 
@@ -114,6 +127,7 @@ void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, R
 
 
     if(getDir(documentos) != NULL) criaRBTpesquisa(getDir(documentos), stopWords, dirEntrada, T);
+    fclose(arq);
 }
 
 void ordenaValuesPorPageRank(RBTmain** T){
@@ -139,7 +153,7 @@ void printRBTmain(RBTmain* no) {
     printRBTmain(no->esq);
     printf("%s %d\n", no->chave, no->nDocs);
     for (int i = 0; i < no->nDocs; i++) {
-        printf("\t%s\n", getNomeDocumento(no->valor[i]));
+        printf("\t%s\t %Lf \n", getNomeDocumento(no->valor[i]), getLastPageRankDocumento(no->valor[i]));
     }
     printRBTmain(no->dir);
 }
