@@ -19,3 +19,4 @@
 
 ## MELHORIAS
 - [x] O vetor page rank está estático. Fazer dinâmico? (acho que não precisa)
+- [ ] RBT genérica
