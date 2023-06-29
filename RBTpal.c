@@ -56,7 +56,6 @@ RBTpal* insereRBTpal(RBTpal* no, int chave, char* valor) {
     int cmp = strcmp(valor, no->valor);
     if      (cmp < 0)   no->esq = insereRBTpal(no->esq, chave, valor);
     else if (cmp > 0)   no->dir = insereRBTpal(no->dir, chave, valor);
-    else                printf("Stopword %s ja existe na arvore\n", valor);
 
     if (ehVermelhoRBTpal(no->dir) && !ehVermelhoRBTpal(no->esq))     no = rotacionaEsqRBTpal(no);
     if (ehVermelhoRBTpal(no->esq) && ehVermelhoRBTpal(no->esq->esq)) no = rotacionaDirRBTpal(no);
