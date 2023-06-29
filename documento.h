@@ -20,7 +20,7 @@ long double getPageRankAtualDocumento(Doc* documento);
 
 long double getPageRankAnteriorDocumento(Doc* documento);
 
-long double getLastPageRankDocumento(Doc* documento);
+void setPageRankAnteriorDocumento(Doc* documento, long double pageRankAnterior);
 
 int getNumLinksInDocumento(Doc* documento);
 
@@ -47,7 +47,5 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada);
 void linkaDocumentos(RBTdocs* documentos, char* dirEntrada);
 
 void calculaPageRankDocumento(Doc* doc, int numDocs);
-
-void consertaPageRankDocumento(Doc* doc);
 
 #endif // DOCUMENTO_H

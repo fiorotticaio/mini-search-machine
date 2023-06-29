@@ -35,9 +35,8 @@ long double getPageRankAnteriorDocumento(Doc* documento) {
     return documento->pageRankAnterior;
 }
 
-long double getLastPageRankDocumento(Doc *documento)
-{
-    return 0;
+void setPageRankAnteriorDocumento(Doc* documento, long double pageRankAnterior) {
+    documento->pageRankAnterior = pageRankAnterior;
 }
 
 int getNumLinksInDocumento(Doc* documento) {
@@ -223,8 +222,4 @@ void calculaPageRankDocumento(Doc* doc, int numDocs) { // Diretamente da formula
         }
         doc->pageRankAtual = parcela1 + parcela2 + (ALFA_PR * somatorio);
     }
-}
-
-void consertaPageRankDocumento(Doc* doc) {
-    doc->pageRankAnterior = doc->pageRankAtual;
 }
