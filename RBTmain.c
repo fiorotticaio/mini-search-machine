@@ -12,8 +12,8 @@ struct noMain { // BRT
 int comparaPageRank(const void* a, const void* b) {
     Doc* docA = *(Doc**) a;
     Doc* docB = *(Doc**) b;
-    if (getLastPageRankDocumento(docA)> getLastPageRankDocumento(docB)) return -1;
-    if (getLastPageRankDocumento(docA)< getLastPageRankDocumento(docB)) return 1;
+    if (getPageRankAtualDocumento(docA)> getPageRankAtualDocumento(docB)) return -1;
+    if (getPageRankAtualDocumento(docA)< getPageRankAtualDocumento(docB)) return 1;
     return 0;
 }
 
@@ -153,7 +153,7 @@ void printRBTmain(RBTmain* no) {
     printRBTmain(no->esq);
     printf("%s %d\n", no->chave, no->nDocs);
     for (int i = 0; i < no->nDocs; i++) {
-        printf("\t%s\t %Lf \n", getNomeDocumento(no->valor[i]), getLastPageRankDocumento(no->valor[i]));
+        printf("\t%s\t %Lf \n", getNomeDocumento(no->valor[i]), getPageRankAtualDocumento(no->valor[i]));
     }
     printRBTmain(no->dir);
 }
