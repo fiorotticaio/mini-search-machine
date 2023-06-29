@@ -105,40 +105,48 @@ char* getChave(RBTdocs* no){
     return no->chave;
 }
 
-static long double getDifPageRank(RBTdocs* no, int k) { // Função resursiva
+static long double getDifPageRank(RBTdocs* no) { // Função resursiva
     if (no == NULL) return 0;
 
     long double somatorio = 0.0;
-    somatorio += getDifPageRank(no->esq, k);
+    somatorio += getDifPageRank(no->esq);
 
     /* Nó atual */
-    long double dif = (getPageRankDocumento(no->valor, k) - getPageRankDocumento(no->valor, k-1));
+    long double dif = (getPageRankAtualDocumento(no->valor) - getPageRankAnteriorDocumento(no->valor));
     if (dif < 0) dif *= -1; // Pegar o módulo
     somatorio += dif;
 
-    somatorio += getDifPageRank(no->dir, k);
+    somatorio += getDifPageRank(no->dir);
     return somatorio;
 }
 
-static int terminouCalculoPageRank(RBTdocs* no, int numDocs, int k) {
+static int terminouCalculoPageRank(RBTdocs* no, int numDocs) {
     long double E = 0.0, somatorio = 0.0;
-    somatorio = getDifPageRank(no, k);
+    somatorio = getDifPageRank(no);
     E = (long double) somatorio / numDocs;
     return E < DIF_LIMITE_PR;
 }
 
-static void calcPG(RBTdocs* no, int numDocs, int k) { // Função resursiva
+static void calcPG(RBTdocs* no, int numDocs) { // Função resursiva
     if (no == NULL) return;
-    calcPG(no->esq, numDocs, k);
-    setUltimaPosPageRankDocumento(no->valor, k); // Atualiza a última posição válida do page rank
-    calculaPageRankDocumento(no->valor, numDocs, k); // Nó atual
-    calcPG(no->dir, numDocs, k);
+    calcPG(no->esq, numDocs);
+    calculaPageRankDocumento(no->valor, numDocs); // Nó atual
+    calcPG(no->dir, numDocs);
+}
+
+static void consertaPageRankDocs(RBTdocs* no) {
+    if (no == NULL) return;
+    consertaPageRankDocs(no->esq);
+    consertaPageRankDocumento(no->valor);
+    consertaPageRankDocs(no->dir);
 }
 
 void calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
     if (no == NULL) return;
-    int k = 1; // A iteração 0 já foi feita na criação do documento
+    int k = 0, rtn = -1;
     do {
-        calcPG(no, numDocs, k); // Calcula o page rank de todos os docs para a iteração k
-    } while (!terminouCalculoPageRank(no, numDocs, k++));
+        calcPG(no, numDocs); // Calcula o page rank de todos os docs para a iteração k
+        rtn = terminouCalculoPageRank(no, numDocs); // Verifica se acabou o cálculo do page rank
+        consertaPageRankDocs(no); // Ajusta o page rank atual e antigo dos documentos
+    } while (!rtn);
 }
