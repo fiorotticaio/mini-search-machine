@@ -115,6 +115,7 @@ static long double getDifPageRank(RBTdocs* no) { // Função resursiva
     long double dif = (getPageRankAtualDocumento(no->valor) - getPageRankAnteriorDocumento(no->valor));
     if (dif < 0) dif *= -1; // Pegar o módulo
     somatorio += dif;
+    setPageRankAnteriorDocumento(no->valor, getPageRankAtualDocumento(no->valor)); // Atualiza o page rank anterior
 
     somatorio += getDifPageRank(no->dir);
     return somatorio;
@@ -134,19 +135,12 @@ static void calcPG(RBTdocs* no, int numDocs) { // Função resursiva
     calcPG(no->dir, numDocs);
 }
 
-static void consertaPageRankDocs(RBTdocs* no) {
-    if (no == NULL) return;
-    consertaPageRankDocs(no->esq);
-    consertaPageRankDocumento(no->valor);
-    consertaPageRankDocs(no->dir);
-}
-
 void calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
     if (no == NULL) return;
-    int k = 0, rtn = -1;
+    int k = 0;
     do {
-        calcPG(no, numDocs); // Calcula o page rank de todos os docs para a iteração k
-        rtn = terminouCalculoPageRank(no, numDocs); // Verifica se acabou o cálculo do page rank
-        consertaPageRankDocs(no); // Ajusta o page rank atual e antigo dos documentos
-    } while (!rtn);
+        calcPG(no, numDocs); // Calcula o page rank de todos os docs para cada iteração
+        k++;
+    } while (!terminouCalculoPageRank(no, numDocs));
+    printf("Número de iterações: %d\n", k);
 }
