@@ -41,15 +41,15 @@ int main(int argc, char** argv) {
   /*========= Testes de Pesquisa ============*/
   // SÓ FUNCIONAM PARA O EXEMPLO 0 (É SÓ PRA TESTAR MESMO)
 
-  printf("\n\nTESTANDO PESQUISA:\n\n buscando abacate\n");
+  // printf("\n\nTESTANDO PESQUISA:\n\n buscando abacate\n");
   
-  Doc** ex1 = buscaRBTmain(T, "aBaCaTe");
-  printf("%s: %Lf\n", getNomeDocumento(ex1[0]), getLastPageRankDocumento(ex1[0]));   //pegando o primeiro documento só pra testar.
+  // Doc** ex1 = buscaRBTmain(T, "aBaCaTe");
+  // printf("%s: %Lf\n", getNomeDocumento(ex1[0]), getPageRankAtualDocumento(ex1[0]));   //pegando o primeiro documento só pra testar.
   
-  printf("\n Buscando maca\n");
+  // printf("\n Buscando maca\n");
 
-  Doc** ex2 = buscaRBTmain(T, "Maca");
-  printf("%s: %Lf\n", getNomeDocumento(ex2[0]), getLastPageRankDocumento(ex2[0]));
+  // Doc** ex2 = buscaRBTmain(T, "Maca");
+  // printf("%s: %Lf\n", getNomeDocumento(ex2[0]), getPageRankAtualDocumento(ex2[0]));
 
 
 
