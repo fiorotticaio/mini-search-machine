@@ -22,7 +22,7 @@ RBTmain* rotacionaDirRBTmain(RBTmain* no);
 
 void trocaCorRBTmain(RBTmain* no);
 
-Doc** buscaRBTmain(RBTmain* n, char* chave);
+RBTmain* buscaRBTmain(RBTmain* n, char* chave);
 
 RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor);
 
@@ -33,6 +33,10 @@ void ordenaValuesPorPageRank(RBTmain** T);
 bool ehVermelhoRBTmain(RBTmain* no);
 
 void printRBTmain(RBTmain* no);
+
+void promptPesquisa(RBTmain * T);
+
+Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResultados);
 
 void liberaNoRBTmain(RBTmain* no);
 

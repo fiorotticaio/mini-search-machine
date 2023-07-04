@@ -121,11 +121,12 @@ void liberaNomeDocumentos(char** nomeDocumentos) {
 }
 
 RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
-    /* Criando o diretório onde estão os documentos */
+    // Abrindo o diretório principal de páginas
     char dirDocs[100];
     sprintf(dirDocs, "%s/pages", dirEntrada);
     FILE* arq = fopen(dirDocs, "r");
 
+    // Caso haja problema com o diretório
     if (arq == NULL) {
         printf("Erro ao abrir arquivo no diretorio: %s\n", dirDocs);
         exit(1);
@@ -133,6 +134,8 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
 
     RBTdocs* documentos = NULL;
     int i = 0;
+    
+    // Criando uma struct Doc para cada página no diretório e inserindo na RBTdocs
     while (nomeDocumentos[i] != NULL) {
         Doc* documento = criaDocumento(nomeDocumentos[i], numDocs);
         documentos = insereRBTdocs(documentos, nomeDocumentos[i], documento);
@@ -144,39 +147,44 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
 }
 
 void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
-    /* Criando diretório do arquivo do grafo */
+    // Recebendo o diretório com as ligações entre as páginas
     char dirGrafo[100];
     sprintf(dirGrafo, "%s/graph.txt", dirEntrada);
     FILE* arq = fopen(dirGrafo, "r");
 
+    // Caso haja problema com o diretório
     if (arq == NULL) {
         printf("Erro ao abrir arquivo no diretorio: %s\n", dirGrafo);
         exit(1);
     }
 
+    // TODO: esses tamanhos de 100 são arbitrários?
     char nomeDoc[100], nomeDocLink[100];
     int qtdLinksDoc = 0;
 
+    // Lendo o arquivo de ligações
     while (!feof(arq)) {
         fscanf(arq, "%s", nomeDoc); // Lê o nome do documento
-        fscanf(arq, "%d", &qtdLinksDoc); // Lê a quantidade de links do documento
+        fscanf(arq, "%d", &qtdLinksDoc); // Lê a quantidade de LINKS OUT do documento
 
         Doc* doc = buscaRBTdocs(documentos, nomeDoc); // Busca o documento na árvore
-        setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de links out do documento
-        doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de links out do documento
+        setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de LINKS OUT do documento
+        doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de LINKS OUT do documento
         // FIXME: erro aqui
 
         int i = 0;
-        while (i < qtdLinksDoc) {
-            fscanf(arq, "%s", nomeDocLink); // Lê o nome do documento que o documento aponta
 
-            /* Acessa o documento que o documento aponta */ 
+        // loop por todos os documentos do array de LINKS OUT
+        while (i < qtdLinksDoc) {
+            fscanf(arq, "%s", nomeDocLink); 
+
+            /* Acessa o documento do array */ 
             Doc* docLink = buscaRBTdocs(documentos, nomeDocLink);
 
-            /* Adiciona o documento que o documento aponta na lista de links out do documento */
+            /* Adiciona o documento do array na lista de LINKS OUT do documento atual*/
             adicionaLinkOutDocumento(doc, docLink, i);
 
-            /* Adiciona o documento na lista de links in do documento que o documento aponta */
+            /* Adiciona o documento atual na lista de LINKS IN do documento do array */
             adicionaLinkInDocumento(docLink, doc);
 
             i++;
@@ -223,3 +231,5 @@ void calculaPageRankDocumento(Doc* doc, int numDocs) { // Diretamente da formula
         doc->pageRankAtual = parcela1 + parcela2 + (ALFA_PR * somatorio);
     }
 }
+
+

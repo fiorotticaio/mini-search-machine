@@ -2,7 +2,8 @@
 
 #include <stdio.h>
 
-struct noDocs { // BRT
+// Red-Black Tree de Documentos/Páginas
+struct noDocs { 
     char* chave;
     Doc* valor;
     bool cor;
@@ -142,5 +143,5 @@ void calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
         calcPG(no, numDocs); // Calcula o page rank de todos os docs para cada iteração
         k++;
     } while (!terminouCalculoPageRank(no, numDocs));
-    printf("Número de iterações: %d\n", k);
+    // printf("Número de iterações: %d\n", k);
 }

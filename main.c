@@ -25,18 +25,17 @@ int main(int argc, char** argv) {
   linkaDocumentos(documentos, argv[1]);
 
 
-  /*========== Cálculo do page rank ==========*/
+  /*========== Cálculo do page rank final de todas as páginas ==========*/
   calculaPageRankRBTdocs(documentos, qtdDocs);
 
-  /*================ Criação da árvore com as palavras ================*/
+  /*================ Criação da árvore com as possíveis buscas ================*/
   RBTmain* T = NULL;
   criaRBTpesquisa(documentos,  S, argv[1], &T);
-  ordenaValuesPorPageRank(&T);
-
+  ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
 
   /*========== Debug ==========*/
-  printRBTdocs(documentos);
-  printRBTmain(T);
+  // printRBTdocs(documentos);
+  // printRBTmain(T);
   
   /*========= Testes de Pesquisa ============*/
   // SÓ FUNCIONAM PARA O EXEMPLO 0 (É SÓ PRA TESTAR MESMO)
@@ -44,7 +43,8 @@ int main(int argc, char** argv) {
   // printf("\n\nTESTANDO PESQUISA:\n\n buscando abacate\n");
   
   // Doc** ex1 = buscaRBTmain(T, "aBaCaTe");
-  // printf("%s: %Lf\n", getNomeDocumento(ex1[0]), getPageRankAtualDocumento(ex1[0]));   //pegando o primeiro documento só pra testar.
+  //pegando o primeiro documento só pra testar.
+  // printf("%s: %Lf\n", getNomeDocumento(ex1[0]), getPageRankAtualDocumento(ex1[0]));   
   
   // printf("\n Buscando maca\n");
 
@@ -52,7 +52,8 @@ int main(int argc, char** argv) {
   // printf("%s: %Lf\n", getNomeDocumento(ex2[0]), getPageRankAtualDocumento(ex2[0]));
 
 
-
+  /* =========== Prompt de Buscas ===========  */
+  promptPesquisa(T);
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
