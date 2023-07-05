@@ -1,6 +1,0 @@
-search:maca abacate
-pages:e.txt
-pr:0.06695664
-search:abacate ruim
-pages:c.txt b.txt
-pr:0.74067344 0.09541328

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DIF_LIMITE_PR 0.000001
+#define DIF_LIMITE_PR 0.000001 // 10^-6  
 #define ALFA_PR 0.85
 
 typedef struct noDocs RBTdocs;

@@ -75,24 +75,36 @@ RBTmain* buscaRBTmain(RBTmain* n, char* chave) {
 }
 
 RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor) {
+    
+    // Caso nó seja NULO, não há chave, então crie
     if (no == NULL){
         return criaNoRBTmain(chave, valor);
     }
 
     int cmp = strcmp(chave, no->chave);
+
+    // Caso chave seja menor, vá p esquerda, caso for maior, vá p direita, senão substitui
     if      (cmp < 0)   no->esq = insereRBTmain(no->esq, chave, valor);
     else if (cmp > 0)   no->dir = insereRBTmain(no->dir, chave, valor);
     else {
+        // Verificando se o documento já não está associado à essa chave
+        for(int i=0;i<no->nDocs;i++) {
+            char * nomeDocNaArvore = getNomeDocumento(no->valor[i]);
+            char * nomeDocAInserir = getNomeDocumento(valor);
+            if (strcmp(nomeDocAInserir, nomeDocNaArvore)==0) return no;
+        }
+
+        // Caso não esteja, insira-o na árvore
         no->nDocs++;
         Doc** docs = (Doc**) realloc(no->valor, sizeof(Doc*) * no->nDocs);
         docs[no->nDocs - 1] = valor;
         no->valor = docs;
     }
 
+    // Linhas que demoraram 30 anos para serem feitas pelo Sedwick (conserta RBT ao inserir)
     if (ehVermelhoRBTmain(no->dir) && !ehVermelhoRBTmain(no->esq))     no = rotacionaEsqRBTmain(no);
     if (ehVermelhoRBTmain(no->esq) && ehVermelhoRBTmain(no->esq->esq)) no = rotacionaDirRBTmain(no);
     if (ehVermelhoRBTmain(no->esq) && ehVermelhoRBTmain(no->dir))      trocaCorRBTmain(no);
-
     return no;
 }
 
@@ -168,8 +180,8 @@ void printRBTmain(RBTmain* no) {
 int comparaPageRankComDesempate(const void* a, const void* b) {
     Doc* docA = *(Doc**) a;
     Doc* docB = *(Doc**) b;
-    if (getPageRankAtualDocumento(docA)> getPageRankAtualDocumento(docB)) return -1;
-    if (getPageRankAtualDocumento(docA)< getPageRankAtualDocumento(docB)) return 1;
+    if (getPageRankAtualDocumento(docA) > getPageRankAtualDocumento(docB)) return -1;
+    if (getPageRankAtualDocumento(docA) < getPageRankAtualDocumento(docB)) return 1;
         
     return strcmp(getNomeDocumento(docA), getNomeDocumento(docB));
 }
@@ -198,7 +210,6 @@ void promptPesquisa(RBTmain * T) {
     }
 
     // Definido Buffers para os nomes dos arquivos e os valores de page ranks que serão impressos
-    char * nomesArquivos = NULL;
     char * pageRanksArquivos = NULL;
 
     if (resultadoFinal != NULL)  {
@@ -206,20 +217,15 @@ void promptPesquisa(RBTmain * T) {
         // Ordenando os resultados, incluindo criterio de desempate
         qsort(resultadoFinal, nmrResultados, sizeof(Doc*), comparaPageRankComDesempate);
         
+        printf("pages:");
+
         // Iterando pelos resultados uma única vez, com ajuda de buffers
         for(int i=0;i<nmrResultados;i++) {
             
             //FIXME: tem um erro de memcpy nesses buffers q eu ainda não consegui resolver...
 
-            // Fazendo um buffer com o nome dos arquivos
-            char * nome = getNomeDocumento(resultadoFinal[i]);
-            if (nomesArquivos == NULL) {
-                nomesArquivos = strdup(nome);
-            } else {
-                //TODO: fazer realloc toda hora pode ser ruim.... mas nao sabemos o tamanho máximo dos nomes dos arquivos...
-                nomesArquivos = realloc(nomesArquivos, strlen(nome) + strlen(nomesArquivos) + 3); 
-                sprintf(nomesArquivos, "%s %s", nomesArquivos, nome);
-            }
+            // Não precisa fazer um buffer com os nomes, só os pageranks
+            printf("%s ", getNomeDocumento(resultadoFinal[i]));
 
             // Fazendo um buffer com os valores de page rank
             long double pageRank = getPageRankAtualDocumento(resultadoFinal[i]);
@@ -233,24 +239,17 @@ void promptPesquisa(RBTmain * T) {
             }
         }
 
-        // Imprimindo resultados
-        printf("pages:%s\n", nomesArquivos);
-        printf("pr:%s\n", pageRanksArquivos);
+        // Imprimindo page ranks
+        if (pageRanksArquivos==NULL) printf("\npr:\n");
+        else printf("\npr:%s\n", pageRanksArquivos);
 
-        free(nomesArquivos);
         free(pageRanksArquivos);
         // free(resultadoFinal); //FIXME: talvez tenha q ter isso, mas quando eu boto da erro
-    } else {
-        printf("pages:\n");
-        printf("pr:\n");
     }
     
 }
 
 Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResultados){
-    int i = 0; // "Ponteiro" do vetor de resultados anteriores
-    int j = 0; // "Ponteiro" do vetor de resultados atuais
-    int k = 0; // "Ponteiro" do vetor da intersecção
 
     // Vetor de resultados anteriores está vazio, apenas copie o resultado atual
     if (resultadoFinal==NULL && resultadoPalavra != NULL) {
@@ -265,30 +264,49 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
     Doc ** novoResultado = malloc(sizeof(Doc*) * tamanhoMaximo);
     (*nmrResultados) = 0;
 
-    // Iterando pelos valores dos dois vetores, levando em consideração o page rank
-    while ((i < tamanhoMaximo) && (j < resultadoPalavra->nDocs)) {
-        long double pageRankFinal = getPageRankAtualDocumento(resultadoFinal[i]);
-        long double pageRankAtual = getPageRankAtualDocumento(resultadoPalavra->valor[j]);
-
-        // Caso o page rank seja menor no vetor de resultados anteriores, incremente o ponteiro i 
-        if (pageRankFinal > pageRankAtual) {
-            i++;
-
-        // Caso o page rank seja menor no vetor de resultados atuais, incremente o ponteiro j
-        } else if (pageRankFinal < pageRankAtual) {
-            j++;
-        
-        // Caso contrário, é uma intersecção, então adicione ao vetor e incremente todos os ponteiros
-        } else {
-            novoResultado[k] = resultadoFinal[i];
-            i++;
-            j++;
-            k++;
-            (*nmrResultados)++;
+    // Loops aninhados para detectar as intersecções
+    int k=0;
+    for(int i=0;i<tamanhoMaximo;i++) {
+        for(int j=0;j<resultadoPalavra->nDocs;j++) {
+            char * nomeDocAtual = getNomeDocumento(resultadoFinal[i]);
+            char * nomeDocNovaBusca = getNomeDocumento(resultadoPalavra->valor[j]);
+            if (strcmp(nomeDocAtual, nomeDocNovaBusca)==0) {
+                novoResultado[k++] = resultadoFinal[i];
+                (*nmrResultados)++;
+            }
         }
     }
 
-    //TODO: se quiser da pra dar um realloc nesse vetor de intersecções para ele ficar com nrmResultados de tamanho (certinho)
+    // MÉTODO SEM LOOP ANINHADO (O RESULTADO SAI ERRADO NAS BUSCAS DE PALAVRAS COMPOSTAS)
+    // TODO: tirar depois se a gente não conseguir pensar em consertar (seria bem mais rapido)
+    // int i = 0; // "Ponteiro" do vetor de resultados anteriores
+    // int j = 0; // "Ponteiro" do vetor de resultados atuais
+    // int k = 0; // "Ponteiro" do vetor da intersecção
+    // // Iterando pelos valores dos dois vetores, levando em consideração o page rank
+    // while ((i < tamanhoMaximo) && (j < resultadoPalavra->nDocs)) {
+    //     long double pageRankFinal = getPageRankAtualDocumento(resultadoFinal[i]);
+    //     long double pageRankAtual = getPageRankAtualDocumento(resultadoPalavra->valor[j]);
+    //     // Caso o page rank seja menor no vetor de resultados anteriores, incremente o ponteiro i 
+    //     if (pageRankFinal > pageRankAtual) {
+    //         i++;
+    //     // Caso o page rank seja menor no vetor de resultados atuais, incremente o ponteiro j
+    //     } else if (pageRankFinal < pageRankAtual) {
+    //         j++;
+    //     // Caso contrário, é uma intersecção, então adicione ao vetor e incremente todos os ponteiros
+    //     } else {
+    //         novoResultado[k] = resultadoFinal[i];
+    //         i++;
+    //         j++;
+    //         k++;
+    //         (*nmrResultados)++;
+    //     }
+    // }
+
+
+
+
+    //TODO: o vetor de resultados é maior doq realmente precisa, pq o tamanho mudou (intersecção),
+    //      mas fazer um realloc pode ser disperdicio de tempo
 
     // Liberando o vetor antigo de resultados anterioress e retornando o novo
     return novoResultado;
