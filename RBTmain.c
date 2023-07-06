@@ -185,15 +185,15 @@ void promptPesquisa(RBTmain * T) {
     char buscas[100]; //TODO: valor 100 arbitrário
     printf("search:");
     scanf("%[^\n]", buscas);
-    scanf("%*c");
+    scanf("%*c"); // Limpando o buffer do scanf
 
-    char * palavra = strtok(buscas, " ");
+    char* palavra = strtok(buscas, " ");
     Doc** resultadoFinal = NULL;
     int nmrResultados = 0;
     bool buscaPorPalavraUnica = true;
     
     /* Iterando por cada palavra da busca */
-    while(palavra) {
+    while (palavra) {
         /* Achando os nó da RBT com os documentos que contém a palavra atual */
         RBTmain* resultadoPalavra = buscaRBTmain(T, palavra);
 
@@ -204,7 +204,7 @@ void promptPesquisa(RBTmain * T) {
         palavra = strtok(NULL, " ");
 
         /* Sinalizando que a busca tem mais de uma palavra, para tomar a melhor decisao ao desalocar mais tarde */
-        if (palavra!=NULL) buscaPorPalavraUnica=false;
+        if (palavra != NULL) buscaPorPalavraUnica = false;
     }
 
     /* Definido Buffer os valores de page ranks que serão impressos */
@@ -233,14 +233,21 @@ void promptPesquisa(RBTmain * T) {
             if (pageRanksArquivos == NULL) {
                 pageRanksArquivos = strdup(aux);
             } else {
-                pageRanksArquivos = realloc(pageRanksArquivos, strlen(aux) + strlen(pageRanksArquivos) + 2);
-                sprintf(pageRanksArquivos, "%s %Lf", pageRanksArquivos, pageRank);
+                size_t newSize = strlen(aux) + strlen(pageRanksArquivos) + 2;
+                char* tempBuffer = malloc(newSize); // Buffer auxiliar para não precisar dar realloc diretamente no pageRanksArquivos
+                if (tempBuffer == NULL) {
+                    printf("Erro ao alocar memória para o buffer de page ranks\n");
+                    exit(1);
+                }
+                sprintf(tempBuffer, "%s %Lf", pageRanksArquivos, pageRank);
+                free(pageRanksArquivos);
+                pageRanksArquivos = tempBuffer;
             }
         }
 
         /* Imprimindo page ranks */
         if (pageRanksArquivos == NULL) printf("\npr:\n");
-        else printf("\npr:%s\n", pageRanksArquivos);
+        else                           printf("\npr:%s\n", pageRanksArquivos);
 
         free(pageRanksArquivos);
         if (!buscaPorPalavraUnica) free(resultadoFinal);
