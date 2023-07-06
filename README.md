@@ -10,13 +10,15 @@
 - [x] struct's red black tree
 - [x] calcular page rank
 - [x] T : red black tree com chave palavra e valor vetor de documentos (ordenados por PR)
-- [ ] ir lendo e processando linha por linha da entrada padrão
-- [ ] fazer lógica de busca dos termos
+- [x] ir lendo e processando linha por linha da entrada padrão
+- [x] fazer lógica de busca dos termos
 
 ## BUGS
-- [ ] falta um free (alocado em "linkaDocumentos")
+- [x] falta um free (alocado em "linkaDocumentos")
   - Ele da erro nos casos exemplos 1 e 2, mas no 0 não
+- [x] Source and destination overlap in mempcpy na função promptPesquisa
 
 ## MELHORIAS
 - [x] O vetor page rank está estático. Fazer dinâmico? (acho que não precisa)
 - [ ] RBT genérica
+- [ ] TST
