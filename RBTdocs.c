@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-// Red-Black Tree de Documentos/Páginas
+/* Red-Black Tree de Documentos/Páginas */
 struct noDocs { 
     char* chave;
     Doc* valor;
@@ -107,7 +107,8 @@ char* getChave(RBTdocs* no){
     return no->chave;
 }
 
-static long double getDifPageRank(RBTdocs* no) { // Função recursiva
+/* Função recursiva */
+static long double getDifPageRank(RBTdocs* no) {
     if (no == NULL) return 0;
 
     long double somatorio = 0.0;
@@ -130,7 +131,8 @@ static int terminouCalculoPageRank(RBTdocs* no, int numDocs) {
     return E < DIF_LIMITE_PR;
 }
 
-static void calcPG(RBTdocs* no, int numDocs) { // Função recursiva
+/* Função recursiva */
+static void calcPG(RBTdocs* no, int numDocs) {
     if (no == NULL) return;
     calcPG(no->esq, numDocs);
     calculaPageRankDocumento(no->valor, numDocs); // Nó atual
@@ -144,5 +146,4 @@ void calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
         calcPG(no, numDocs); // Calcula o page rank de todos os docs para cada iteração
         k++;
     } while (!terminouCalculoPageRank(no, numDocs));
-    // printf("Número de iterações: %d\n", k);
 }
