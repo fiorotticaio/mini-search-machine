@@ -1,17 +1,16 @@
 #include "RBTpal.h"
 
-// Red-Black Tree de palavras
+/* Red-Black Tree de palavras (para as stopwords) */
 struct noPal {
-    int chave;
-    char* valor;
+    char* chave;
+    // Não precisa de valor
     bool cor;
     RBTpal *esq, *dir;
 };
 
-RBTpal* criaNoRBTpal(int chave, char* valor) {
+RBTpal* criaNoRBTpal(char* chave) {
     RBTpal* no = (RBTpal*) malloc(sizeof(RBTpal));
-    no->chave = chave;
-    no->valor = strdup(valor);
+    no->chave = strdup(chave);
     no->cor = RED;
     no->esq = no->dir = NULL;
     return no;
@@ -41,22 +40,22 @@ void trocaCorRBTpal(RBTpal* no) {
     no->dir->cor = BLACK;
 }
 
-char* buscaRBTPal(RBTpal* n, char* valor) {
+char* buscaRBTPal(RBTpal* n, char* chave) {
     while (n != NULL) {
-        int cmp = strcmp(valor, n->valor);
+        int cmp = strcmp(chave, n->chave);
         if      (cmp < 0)   n = n->esq;
         else if (cmp > 0)   n = n->dir;
-        else /* cmp == 0 */ return n->valor;
+        else /* cmp == 0 */ return n->chave;
     }
     return NULL;
 }
 
-RBTpal* insereRBTpal(RBTpal* no, int chave, char* valor) {
-    if (no == NULL) return criaNoRBTpal(chave, valor);
+RBTpal* insereRBTpal(RBTpal* no, char* chave) {
+    if (no == NULL) return criaNoRBTpal(chave);
 
-    int cmp = strcmp(valor, no->valor);
-    if      (cmp < 0)   no->esq = insereRBTpal(no->esq, chave, valor);
-    else if (cmp > 0)   no->dir = insereRBTpal(no->dir, chave, valor);
+    int cmp = strcmp(chave, no->chave);
+    if      (cmp < 0)   no->esq = insereRBTpal(no->esq, chave);
+    else if (cmp > 0)   no->dir = insereRBTpal(no->dir, chave);
 
     if (ehVermelhoRBTpal(no->dir) && !ehVermelhoRBTpal(no->esq))     no = rotacionaEsqRBTpal(no);
     if (ehVermelhoRBTpal(no->esq) && ehVermelhoRBTpal(no->esq->esq)) no = rotacionaDirRBTpal(no);
@@ -72,7 +71,7 @@ bool ehVermelhoRBTpal(RBTpal* no) {
 
 void liberaNoRBTpal(RBTpal* no) {
     if (no == NULL) return;
-    if (no->valor!=NULL) free(no->valor);
+    if (no->chave!=NULL) free(no->chave);
     if (no->esq != NULL) liberaNoRBTpal(no->esq);
     if (no->dir != NULL) liberaNoRBTpal(no->dir);
     free(no);
@@ -95,7 +94,7 @@ RBTpal* leStopWords(char* dirEntrada) {
     while (!feof(stopWordsArq)) {
         char stopWord[100]; // Variável auxiliar para leitura
         fscanf(stopWordsArq, "%[^\n]\n", stopWord); // Lê a stopWord
-        stopWords = insereRBTpal(stopWords, chaveStopWord, stopWord); // Insere a nova stopWord na RBT
+        stopWords = insereRBTpal(stopWords, stopWord); // Insere a nova stopWord na RBT
         chaveStopWord++;
     }
 

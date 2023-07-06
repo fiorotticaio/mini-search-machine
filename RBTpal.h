@@ -11,7 +11,7 @@
 
 typedef struct noPal RBTpal;
 
-RBTpal* criaNoRBTpal(int chave, char* valor);
+RBTpal* criaNoRBTpal(char* chave);
 
 RBTpal* rotacionaEsqRBTpal(RBTpal* no);
 
@@ -21,7 +21,7 @@ void trocaCorRBTpal(RBTpal* no);
 
 char* buscaRBTPal(RBTpal* n, char* valor);
 
-RBTpal* insereRBTpal(RBTpal* no, int chave, char* valor);
+RBTpal* insereRBTpal(RBTpal* no, char* chave);
 
 bool ehVermelhoRBTpal(RBTpal* no);
 
