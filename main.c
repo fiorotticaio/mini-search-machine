@@ -16,7 +16,6 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-
   /*========== Leitura dos dados de entrada ==========*/
   int qtdDocs = 0;
   char** nomeDocumentos = leNomeDocumentos(argv[1], &qtdDocs);
@@ -24,11 +23,9 @@ int main(int argc, char** argv) {
   RBTdocs* documentos = leDocumentos(nomeDocumentos, qtdDocs, argv[1]);
   linkaDocumentos(documentos, argv[1]);
 
-
   /*========== Cálculo do page rank final de todas as páginas ==========*/
   calculaPageRankRBTdocs(documentos, qtdDocs);
   
-
   /*================ Criação da árvore com as possíveis buscas ================*/
   RBTmain* T = NULL;
   criaRBTpesquisa(documentos,  S, argv[1], &T);
@@ -37,10 +34,9 @@ int main(int argc, char** argv) {
   /*========== Debug ==========*/
   // printRBTdocs(documentos);
   // printRBTmain(T);
-  
+
   /* =========== Prompt de Buscas ===========  */
-  //TODO: lembrar de tornar isso aqui um loop infinito pro usuario
-  promptPesquisa(T);
+  while (1) promptPesquisa(T);
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
