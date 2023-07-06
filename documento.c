@@ -112,20 +112,19 @@ char** leNomeDocumentos(char* dirEntrada, int* qtdDocs) {
 }
 
 void liberaNomeDocumentos(char** nomeDocumentos) {
-    if (nomeDocumentos==NULL) return;
-    
+    if (nomeDocumentos == NULL) return;
     int i = 0;
     while (nomeDocumentos[i++] != NULL) free(nomeDocumentos[i-1]);
     free(nomeDocumentos);
 }
 
 RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
-    // Abrindo o diretório principal de páginas
+    /* Abrindo o diretório principal de páginas */
     char dirDocs[100];
     sprintf(dirDocs, "%s/pages", dirEntrada);
     FILE* arq = fopen(dirDocs, "r");
 
-    // Caso haja problema com o diretório
+    /* Caso haja problema com o diretório */
     if (arq == NULL) {
         printf("Erro ao abrir arquivo no diretorio: %s\n", dirDocs);
         exit(1);
@@ -134,7 +133,7 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
     RBTdocs* documentos = NULL;
     int i = 0;
     
-    // Criando uma struct Doc para cada página no diretório e inserindo na RBTdocs
+    /* Criando uma struct Doc para cada página no diretório e inserindo na RBTdocs */
     while (nomeDocumentos[i] != NULL) {
         Doc* documento = criaDocumento(nomeDocumentos[i], numDocs);
         documentos = insereRBTdocs(documentos, nomeDocumentos[i], documento);
@@ -146,12 +145,12 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
 }
 
 void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
-    // Recebendo o diretório com as ligações entre as páginas
+    /* Recebendo o diretório com as ligações entre as páginas */
     char dirGrafo[100];
     sprintf(dirGrafo, "%s/graph.txt", dirEntrada);
     FILE* arq = fopen(dirGrafo, "r");
 
-    // Caso haja problema com o diretório
+    /* Caso haja problema com o diretório */
     if (arq == NULL) {
         printf("Erro ao abrir arquivo no diretorio: %s\n", dirGrafo);
         exit(1);
@@ -161,7 +160,7 @@ void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
     char nomeDoc[100], nomeDocLink[100];
     int qtdLinksDoc = 0;
 
-    // Lendo o arquivo de ligações
+    /* Lendo o arquivo de ligações */
     while (fscanf(arq, "%s", nomeDoc)==1) {   // Lê o nome do documento
         fscanf(arq, "%d", &qtdLinksDoc);      // Lê a quantidade de LINKS OUT do documento
 
@@ -197,7 +196,7 @@ void adicionaLinkOutDocumento(Doc* documento, Doc* documentoLink, int posicao) {
 
 void adicionaLinkInDocumento(Doc *documento, Doc *documentoLink) {
     int numLinksIn = getNumLinksInDocumento(documento);
-    if (numLinksIn == 0) {
+    if (numLinksIn == 0) { // Se for o primeiro
         documento->linksIn = (Doc**) malloc(sizeof(Doc*));
     } else {
         documento->linksIn = (Doc**) realloc(documento->linksIn, (numLinksIn + 1) * sizeof(Doc*));
@@ -229,5 +228,3 @@ void calculaPageRankDocumento(Doc* doc, int numDocs) { // Diretamente da formula
         doc->pageRankAtual = parcela1 + parcela2 + (ALFA_PR * somatorio);
     }
 }
-
-
