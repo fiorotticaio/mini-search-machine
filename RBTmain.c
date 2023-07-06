@@ -1,7 +1,6 @@
 #include "RBTmain.h"
 
-
-// Red-Black Tree de possíveis buscas
+/* Red-Black Tree de possíveis buscas */
 struct noMain { 
     char* chave;
     Doc** valor;
@@ -10,21 +9,11 @@ struct noMain {
     RBTmain *esq, *dir;
 };
 
-// TODO: lembrar de tirar depois
-// int comparaPageRank(const void* a, const void* b) {
-//     Doc* docA = *(Doc**) a;
-//     Doc* docB = *(Doc**) b;
-//     if (getPageRankAtualDocumento(docA)> getPageRankAtualDocumento(docB)) return -1;
-//     if (getPageRankAtualDocumento(docA)< getPageRankAtualDocumento(docB)) return 1;
-//     return 0;
-// }
-
 int comparaLexicografico(const void* a, const void* b) {
     Doc* docA = *(Doc**) a;
     Doc* docB = *(Doc**) b;
     return strcmp(getNomeDocumento(docA), getNomeDocumento(docB));
 }
-
 
 RBTmain* criaNoRBTmain(char* chave, Doc* valor) {
     RBTmain* no = (RBTmain*) malloc(sizeof(RBTmain));
@@ -63,53 +52,51 @@ void trocaCorRBTmain(RBTmain* no) {
 }
 
 RBTmain* buscaRBTmain(RBTmain* n, char* chave) {
-    char* chave_lower = strdup(chave);  // Cria uma cópia da chave
+    char* chaveLower = strdup(chave);  // Cria uma cópia da chave
 
-    for (int i = 0; chave_lower[i] != '\0'; i++) {
-        chave_lower[i] = tolower(chave_lower[i]);  // Converte para minúsculo
+    int i = 0;
+    for (i = 0; chaveLower[i] != '\0'; i++) {
+        chaveLower[i] = tolower(chaveLower[i]);  // Converte para minúsculo
     }
+
     while (n != NULL) {
-        int cmp = strcmp(chave_lower, n->chave);
-        if      (cmp < 0)   n = n->esq;
-        else if (cmp > 0)   n = n->dir;
-        else {
-            free(chave_lower);
-            // return n->valor;
+        int cmp = strcmp(chaveLower, n->chave);
+        if      (cmp < 0) n = n->esq;
+        else if (cmp > 0) n = n->dir;
+        else { // Encontrou
+            free(chaveLower);
             return n;
         }
     }
-    free(chave_lower);
+    free(chaveLower);
     return NULL;
 }
 
 RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor) {
-    
-    // Caso nó seja NULO, não há chave, então crie
-    if (no == NULL){
-        return criaNoRBTmain(chave, valor);
-    }
+    /* Caso nó seja NULO, não há chave, então crie */
+    if (no == NULL) return criaNoRBTmain(chave, valor);
 
     int cmp = strcmp(chave, no->chave);
-
-    // Caso chave seja menor, vá p esquerda, caso for maior, vá p direita, senão substitui
-    if      (cmp < 0)   no->esq = insereRBTmain(no->esq, chave, valor);
-    else if (cmp > 0)   no->dir = insereRBTmain(no->dir, chave, valor);
+    /* Caso chave seja menor, vá p esquerda, caso for maior, vá p direita, senão substitui */
+    if      (cmp < 0) no->esq = insereRBTmain(no->esq, chave, valor);
+    else if (cmp > 0) no->dir = insereRBTmain(no->dir, chave, valor);
     else {
-        // Verificando se o documento já não está associado à essa chave
-        for(int i=0;i<no->nDocs;i++) {
-            char * nomeDocNaArvore = getNomeDocumento(no->valor[i]);
-            char * nomeDocAInserir = getNomeDocumento(valor);
-            if (strcmp(nomeDocAInserir, nomeDocNaArvore)==0) return no;
+        /* Verificando se o documento já não está associado à essa chave */
+        int i = 0;
+        for (i = 0; i < no->nDocs; i++) {
+            char* nomeDocNaArvore = getNomeDocumento(no->valor[i]);
+            char* nomeDocAInserir = getNomeDocumento(valor);
+            if (strcmp(nomeDocAInserir, nomeDocNaArvore) == 0) return no;
         }
 
-        // Caso não esteja, insira-o na árvore
+        /* Caso não esteja, insira-o na árvore */
         no->nDocs++;
         Doc** docs = (Doc**) realloc(no->valor, sizeof(Doc*) * no->nDocs);
         docs[no->nDocs - 1] = valor;
         no->valor = docs;
     }
 
-    // Linhas que demoraram 30 anos para serem feitas pelo Sedwick (conserta RBT ao inserir)
+    /* Linhas que demoraram 30 anos para serem feitas pelo Sedwick (conserta RBT ao inserir) */
     if (ehVermelhoRBTmain(no->dir) && !ehVermelhoRBTmain(no->esq))     no = rotacionaEsqRBTmain(no);
     if (ehVermelhoRBTmain(no->esq) && ehVermelhoRBTmain(no->esq->esq)) no = rotacionaDirRBTmain(no);
     if (ehVermelhoRBTmain(no->esq) && ehVermelhoRBTmain(no->dir))      trocaCorRBTmain(no);
@@ -119,31 +106,30 @@ RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor) {
 void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, RBTmain** T){
     if (documentos == NULL) return;
 
-    // Percorrendo recursivamente o ramo da esquerda
-    if(getEsq(documentos) != NULL) criaRBTpesquisa(getEsq(documentos), stopWords, dirEntrada, T);
+    /* Percorrendo recursivamente o ramo da esquerda */
+    if (getEsq(documentos) != NULL) criaRBTpesquisa(getEsq(documentos), stopWords, dirEntrada, T);
     
-    // Acessando o documento atual
+    /* Acessando o documento atual */
     Doc* doc = getValor(documentos);
     char diretorio[100];
     sprintf(diretorio, "%s/pages/%s", dirEntrada, getNomeDocumento(doc));
     FILE* arq = fopen(diretorio, "r");
 
-    // Caso haja problema com o diretório
-    if(arq == NULL) {
+    /* Caso haja problema com o diretório */
+    if (arq == NULL) {
         printf("Erro ao abrir o arquivo %s\n", diretorio);
         exit(1);
     }
 
-    // Adicionando as palavras do documento na RBT de pesquisa
+    /* Adicionando as palavras do documento na RBT de pesquisa */
     char* palavra = NULL;
     while (fscanf(arq, "%ms", &palavra) != EOF) {
         
-        // Transforma a palavra em minusculo
-        for (int i = 0; palavra[i] != '\0'; i++) {
-            palavra[i] = tolower(palavra[i]);
-        }
+        /* Transforma a palavra em minusculo */
+        int i = 0;
+        for (i = 0; palavra[i] != '\0'; i++) palavra[i] = tolower(palavra[i]);
 
-        // Adiciona a palavra nas pesquisas possíveis se não for uma stopwords
+        /* Adiciona a palavra nas pesquisas possíveis se não for uma stopwords */
         if (buscaRBTPal(stopWords, palavra) == NULL) {
             *T = insereRBTmain(*T, palavra, doc);
         }
@@ -151,8 +137,9 @@ void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, R
         free(palavra);
     }
 
-    // Percorrendo recursivamente o ramo da direita
-    if(getDir(documentos) != NULL) criaRBTpesquisa(getDir(documentos), stopWords, dirEntrada, T);
+    /* Percorrendo recursivamente o ramo da direita */
+    if (getDir(documentos) != NULL) criaRBTpesquisa(getDir(documentos), stopWords, dirEntrada, T);
+
     fclose(arq);
 }
 
@@ -161,9 +148,9 @@ void ordenaValuesPorPageRank(RBTmain** T){
 
     if((*T)->esq != NULL) ordenaValuesPorPageRank(&(*T)->esq);
 
+    /* Nó atual */
     Doc** docs = (*T)->valor;
     int nDocs = (*T)->nDocs;
-    // qsort(docs, nDocs, sizeof(Doc*), comparaPageRank);
     qsort(docs, nDocs, sizeof(Doc*), comparaLexicografico);
 
     if((*T)->dir != NULL) ordenaValuesPorPageRank(&(*T)->dir);
@@ -176,7 +163,6 @@ bool ehVermelhoRBTmain(RBTmain* no) {
 
 void printRBTmain(RBTmain* no) {
     if (no == NULL) return;
-
     printRBTmain(no->esq);
     printf("%s %d\n", no->chave, no->nDocs);
     for (int i = 0; i < no->nDocs; i++) {
@@ -185,7 +171,6 @@ void printRBTmain(RBTmain* no) {
     printRBTmain(no->dir);
 }
 
-//TODO: tem uma função igual essa só q sem desempate la encima
 int comparaPageRankComDesempate(const void* a, const void* b) {
     Doc* docA = *(Doc**) a;
     Doc* docB = *(Doc**) b;
@@ -196,7 +181,7 @@ int comparaPageRankComDesempate(const void* a, const void* b) {
 }
 
 void promptPesquisa(RBTmain * T) {
-    // Recebendo todas as palavras buscadas em um vetor
+    /* Recebendo todas as palavras buscadas em um vetor */
     char buscas[100]; //TODO: valor 100 arbitrário
     printf("search:");
     scanf("%[^\n]", buscas);
@@ -207,40 +192,41 @@ void promptPesquisa(RBTmain * T) {
     int nmrResultados = 0;
     bool buscaPorPalavraUnica = true;
     
-    // Iterando por cada palavra da busca
+    /* Iterando por cada palavra da busca */
     while(palavra) {
-        // Achando os nó da RBT com os documentos que contém a palavra atual
+        /* Achando os nó da RBT com os documentos que contém a palavra atual */
         RBTmain* resultadoPalavra = buscaRBTmain(T, palavra);
 
-        // Fazendo a intersecção com os resultados anteriores
+        /* Fazendo a intersecção com os resultados anteriores */
         resultadoFinal = interseccao(resultadoFinal, resultadoPalavra, &nmrResultados);
 
-        // Proxima palavra
+        /* Proxima palavra */
         palavra = strtok(NULL, " ");
 
-        // Sinalizando que a busca tem mais de uma palavra, para tomar a melhor decisao ao desalocar mais tarde
+        /* Sinalizando que a busca tem mais de uma palavra, para tomar a melhor decisao ao desalocar mais tarde */
         if (palavra!=NULL) buscaPorPalavraUnica=false;
     }
 
-    // Definido Buffer os valores de page ranks que serão impressos
-    char * pageRanksArquivos = NULL;
+    /* Definido Buffer os valores de page ranks que serão impressos */
+    char* pageRanksArquivos = NULL;
 
     if (resultadoFinal != NULL)  {
 
-        // Ordenando os resultados, incluindo criterio de desempate
+        /* Ordenando os resultados, incluindo criterio de desempate */
         qsort(resultadoFinal, nmrResultados, sizeof(Doc*), comparaPageRankComDesempate);
         
         printf("pages:");
 
-        // Iterando pelos resultados uma única vez, com ajuda de buffer
-        for(int i=0;i<nmrResultados;i++) {
+        /* Iterando pelos resultados uma única vez, com ajuda de buffer */
+        int i = 0;
+        for (i = 0; i < nmrResultados; i++) {
             
-            //FIXME: tem um erro de memcpy nesses buffers q eu ainda não consegui resolver...
+            // FIXME: tem um erro de memcpy nesses buffers q eu ainda não consegui resolver...
 
-            // Não precisa fazer um buffer com os nomes, só os pageranks
+            /* Não precisa fazer um buffer com os nomes, só os pageranks */
             printf("%s ", getNomeDocumento(resultadoFinal[i]));
 
-            // Fazendo um buffer com os valores de page rank
+            /* Fazendo um buffer com os valores de page rank */
             long double pageRank = getPageRankAtualDocumento(resultadoFinal[i]);
             char aux[100];
             sprintf(aux, "%Lf", pageRank);
@@ -252,53 +238,38 @@ void promptPesquisa(RBTmain * T) {
             }
         }
 
-        // Imprimindo page ranks
-        if (pageRanksArquivos==NULL) printf("\npr:\n");
+        /* Imprimindo page ranks */
+        if (pageRanksArquivos == NULL) printf("\npr:\n");
         else printf("\npr:%s\n", pageRanksArquivos);
 
         free(pageRanksArquivos);
         if (!buscaPorPalavraUnica) free(resultadoFinal);
     }
-    
 }
 
 Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResultados){
 
-    // Vetor de resultados anteriores está vazio, apenas copie o resultado atual
-    if (resultadoFinal==NULL && resultadoPalavra != NULL) {
+    /* Vetor de resultados anteriores está vazio, apenas copie o resultado atual */
+    if (resultadoFinal == NULL && resultadoPalavra != NULL) {
         (*nmrResultados) = resultadoPalavra->nDocs;
         return resultadoPalavra->valor;
     
     // Caso não tenha sido encontrada nenhuma palavra anteriormente e nem atualmente, retorne nulo
-    } else if (resultadoFinal==NULL && resultadoPalavra != NULL) return NULL;
+    } else if (resultadoFinal == NULL && resultadoPalavra != NULL) return NULL;
 
-    // Senão, crie um novo vetor para armazenar a intersecção
+    /* Senão, crie um novo vetor para armazenar a intersecção */
     int tamanhoMaximo = (*nmrResultados);
-    Doc ** novoResultado = malloc(sizeof(Doc*) * tamanhoMaximo);
+    Doc** novoResultado = malloc(sizeof(Doc*) * tamanhoMaximo);
     (*nmrResultados) = 0;
 
-    // Loops aninhados para detectar as intersecções (Giovanne falou que se fizer assim vai dar ruim)
-    // int k=0;
-    // for(int i=0;i<tamanhoMaximo;i++) {
-    //     for(int j=0;j<resultadoPalavra->nDocs;j++) {
-    //         char * nomeDocAtual = getNomeDocumento(resultadoFinal[i]);
-    //         char * nomeDocNovaBusca = getNomeDocumento(resultadoPalavra->valor[j]);
-    //         if (strcmp(nomeDocAtual, nomeDocNovaBusca)==0) {
-    //             novoResultado[k++] = resultadoFinal[i];
-    //             (*nmrResultados)++;
-    //         }
-    //     }
-    // }
-
-    // MÉTODO SEM LOOP ANINHADO
     int i = 0; // "Ponteiro" do vetor de resultados anteriores
     int j = 0; // "Ponteiro" do vetor de resultados atuais
     int k = 0; // "Ponteiro" do vetor da intersecção
 
-    // Iterando pelos valores dos dois vetores, levando em consideração o page rank
+    /* Iterando pelos valores dos dois vetores, levando em consideração o page rank */
     while ((i < tamanhoMaximo) && (j < resultadoPalavra->nDocs)) {
-        char * nomeDocAnterior = getNomeDocumento(resultadoFinal[i]);
-        char * nomeDocAtual = getNomeDocumento(resultadoPalavra->valor[j]);
+        char* nomeDocAnterior = getNomeDocumento(resultadoFinal[i]);
+        char* nomeDocAtual = getNomeDocumento(resultadoPalavra->valor[j]);
         // Caso o page rank seja menor no vetor de resultados anteriores, incremente o ponteiro i 
         if (strcmp(nomeDocAnterior, nomeDocAtual)<0) {
             i++;
