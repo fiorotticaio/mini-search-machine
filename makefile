@@ -1,5 +1,5 @@
 DIR_ENTRADA_0=exemplo0
-DIR_ENTRADA_1=exemplo1
+DIR_ENTRADA_1=exemplo
 DIR_ENTRADA_2=exemplo2
 
 # all: clean compile runAll valAll
@@ -25,7 +25,7 @@ run0: clean compile
 
 run1: clean compile
 	@ ./trab3 ${DIR_ENTRADA_1}
-
+	
 run2: clean compile
 	@ ./trab3 ${DIR_ENTRADA_2}
 
