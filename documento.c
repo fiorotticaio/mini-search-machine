@@ -163,12 +163,11 @@ void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
     int qtdLinksDoc = 0;
 
     // Lendo o arquivo de ligações
-    while (!feof(arq)) {
-        fscanf(arq, "%s", nomeDoc); // Lê o nome do documento
-        fscanf(arq, "%d", &qtdLinksDoc); // Lê a quantidade de LINKS OUT do documento
+    while (fscanf(arq, "%s", nomeDoc)==1) {   // Lê o nome do documento
+        fscanf(arq, "%d", &qtdLinksDoc);      // Lê a quantidade de LINKS OUT do documento
 
-        Doc* doc = buscaRBTdocs(documentos, nomeDoc); // Busca o documento na árvore
-        setNumLinksOutDocumento(doc, qtdLinksDoc); // Atualiza o número de LINKS OUT do documento
+        Doc* doc = buscaRBTdocs(documentos, nomeDoc);   // Busca o documento na árvore
+        setNumLinksOutDocumento(doc, qtdLinksDoc);      // Atualiza o número de LINKS OUT do documento
         doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de LINKS OUT do documento
         // FIXME: erro aqui
 

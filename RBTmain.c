@@ -9,12 +9,19 @@ struct noMain { // BRT
     RBTmain *esq, *dir;
 };
 
-int comparaPageRank(const void* a, const void* b) {
+// TODO: lembrar de tirar depois
+// int comparaPageRank(const void* a, const void* b) {
+//     Doc* docA = *(Doc**) a;
+//     Doc* docB = *(Doc**) b;
+//     if (getPageRankAtualDocumento(docA)> getPageRankAtualDocumento(docB)) return -1;
+//     if (getPageRankAtualDocumento(docA)< getPageRankAtualDocumento(docB)) return 1;
+//     return 0;
+// }
+
+int comparaLexicografico(const void* a, const void* b) {
     Doc* docA = *(Doc**) a;
     Doc* docB = *(Doc**) b;
-    if (getPageRankAtualDocumento(docA)> getPageRankAtualDocumento(docB)) return -1;
-    if (getPageRankAtualDocumento(docA)< getPageRankAtualDocumento(docB)) return 1;
-    return 0;
+    return strcmp(getNomeDocumento(docA), getNomeDocumento(docB));
 }
 
 
@@ -155,7 +162,8 @@ void ordenaValuesPorPageRank(RBTmain** T){
 
     Doc** docs = (*T)->valor;
     int nDocs = (*T)->nDocs;
-    qsort(docs, nDocs, sizeof(Doc*), comparaPageRank);
+    // qsort(docs, nDocs, sizeof(Doc*), comparaPageRank);
+    qsort(docs, nDocs, sizeof(Doc*), comparaLexicografico);
 
     if((*T)->dir != NULL) ordenaValuesPorPageRank(&(*T)->dir);
 }
@@ -264,45 +272,43 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
     Doc ** novoResultado = malloc(sizeof(Doc*) * tamanhoMaximo);
     (*nmrResultados) = 0;
 
-    // Loops aninhados para detectar as intersecções
-    int k=0;
-    for(int i=0;i<tamanhoMaximo;i++) {
-        for(int j=0;j<resultadoPalavra->nDocs;j++) {
-            char * nomeDocAtual = getNomeDocumento(resultadoFinal[i]);
-            char * nomeDocNovaBusca = getNomeDocumento(resultadoPalavra->valor[j]);
-            if (strcmp(nomeDocAtual, nomeDocNovaBusca)==0) {
-                novoResultado[k++] = resultadoFinal[i];
-                (*nmrResultados)++;
-            }
-        }
-    }
-
-    // MÉTODO SEM LOOP ANINHADO (O RESULTADO SAI ERRADO NAS BUSCAS DE PALAVRAS COMPOSTAS)
-    // TODO: tirar depois se a gente não conseguir pensar em consertar (seria bem mais rapido)
-    // int i = 0; // "Ponteiro" do vetor de resultados anteriores
-    // int j = 0; // "Ponteiro" do vetor de resultados atuais
-    // int k = 0; // "Ponteiro" do vetor da intersecção
-    // // Iterando pelos valores dos dois vetores, levando em consideração o page rank
-    // while ((i < tamanhoMaximo) && (j < resultadoPalavra->nDocs)) {
-    //     long double pageRankFinal = getPageRankAtualDocumento(resultadoFinal[i]);
-    //     long double pageRankAtual = getPageRankAtualDocumento(resultadoPalavra->valor[j]);
-    //     // Caso o page rank seja menor no vetor de resultados anteriores, incremente o ponteiro i 
-    //     if (pageRankFinal > pageRankAtual) {
-    //         i++;
-    //     // Caso o page rank seja menor no vetor de resultados atuais, incremente o ponteiro j
-    //     } else if (pageRankFinal < pageRankAtual) {
-    //         j++;
-    //     // Caso contrário, é uma intersecção, então adicione ao vetor e incremente todos os ponteiros
-    //     } else {
-    //         novoResultado[k] = resultadoFinal[i];
-    //         i++;
-    //         j++;
-    //         k++;
-    //         (*nmrResultados)++;
+    // Loops aninhados para detectar as intersecções (Giovanne falou que se fizer assim vai dar ruim)
+    // int k=0;
+    // for(int i=0;i<tamanhoMaximo;i++) {
+    //     for(int j=0;j<resultadoPalavra->nDocs;j++) {
+    //         char * nomeDocAtual = getNomeDocumento(resultadoFinal[i]);
+    //         char * nomeDocNovaBusca = getNomeDocumento(resultadoPalavra->valor[j]);
+    //         if (strcmp(nomeDocAtual, nomeDocNovaBusca)==0) {
+    //             novoResultado[k++] = resultadoFinal[i];
+    //             (*nmrResultados)++;
+    //         }
     //     }
     // }
 
+    // MÉTODO SEM LOOP ANINHADO
+    int i = 0; // "Ponteiro" do vetor de resultados anteriores
+    int j = 0; // "Ponteiro" do vetor de resultados atuais
+    int k = 0; // "Ponteiro" do vetor da intersecção
 
+    // Iterando pelos valores dos dois vetores, levando em consideração o page rank
+    while ((i < tamanhoMaximo) && (j < resultadoPalavra->nDocs)) {
+        char * nomeDocAnterior = getNomeDocumento(resultadoFinal[i]);
+        char * nomeDocAtual = getNomeDocumento(resultadoPalavra->valor[j]);
+        // Caso o page rank seja menor no vetor de resultados anteriores, incremente o ponteiro i 
+        if (strcmp(nomeDocAnterior, nomeDocAtual)<0) {
+            i++;
+        // Caso o page rank seja menor no vetor de resultados atuais, incremente o ponteiro j
+        } else if (strcmp(nomeDocAnterior, nomeDocAtual)>0) {
+            j++;
+        // Caso contrário, é uma intersecção, então adicione ao vetor e incremente todos os ponteiros
+        } else {
+            novoResultado[k] = resultadoFinal[i];
+            i++;
+            j++;
+            k++;
+            (*nmrResultados)++;
+        }
+    }
 
 
     //TODO: o vetor de resultados é maior doq realmente precisa, pq o tamanho mudou (intersecção),

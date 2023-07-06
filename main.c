@@ -37,22 +37,8 @@ int main(int argc, char** argv) {
   // printRBTdocs(documentos);
   // printRBTmain(T);
   
-  /*========= Testes de Pesquisa ============*/
-  // SÓ FUNCIONAM PARA O EXEMPLO 0 (É SÓ PRA TESTAR MESMO)
-
-  // printf("\n\nTESTANDO PESQUISA:\n\n buscando abacate\n");
-  
-  // Doc** ex1 = buscaRBTmain(T, "aBaCaTe");
-  //pegando o primeiro documento só pra testar.
-  // printf("%s: %Lf\n", getNomeDocumento(ex1[0]), getPageRankAtualDocumento(ex1[0]));   
-  
-  // printf("\n Buscando maca\n");
-
-  // Doc** ex2 = buscaRBTmain(T, "Maca");
-  // printf("%s: %Lf\n", getNomeDocumento(ex2[0]), getPageRankAtualDocumento(ex2[0]));
-
-
   /* =========== Prompt de Buscas ===========  */
+  //TODO: lembrar de tornar isso aqui um loop infinito pro usuario
   promptPesquisa(T);
 
   /*========== Liberação da memória ==========*/
