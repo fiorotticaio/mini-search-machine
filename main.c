@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
 
   /*========== Cálculo do page rank final de todas as páginas ==========*/
   calculaPageRankRBTdocs(documentos, qtdDocs);
+  
 
   /*================ Criação da árvore com as possíveis buscas ================*/
   RBTmain* T = NULL;

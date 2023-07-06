@@ -83,8 +83,9 @@ void printRBTdocs(RBTdocs* no) {
 }
 
 void liberaNoRBTdocs(RBTdocs* no) {
-    free(no->chave);
-    liberaDocumento(no->valor);
+    if (no==NULL) return;
+    if (no->chave != NULL) free(no->chave);
+    if (no->valor != NULL) liberaDocumento(no->valor);
     if (no->esq != NULL) liberaNoRBTdocs(no->esq);
     if (no->dir != NULL) liberaNoRBTdocs(no->dir);
     free(no);
@@ -106,7 +107,7 @@ char* getChave(RBTdocs* no){
     return no->chave;
 }
 
-static long double getDifPageRank(RBTdocs* no) { // Função resursiva
+static long double getDifPageRank(RBTdocs* no) { // Função recursiva
     if (no == NULL) return 0;
 
     long double somatorio = 0.0;
@@ -129,7 +130,7 @@ static int terminouCalculoPageRank(RBTdocs* no, int numDocs) {
     return E < DIF_LIMITE_PR;
 }
 
-static void calcPG(RBTdocs* no, int numDocs) { // Função resursiva
+static void calcPG(RBTdocs* no, int numDocs) { // Função recursiva
     if (no == NULL) return;
     calcPG(no->esq, numDocs);
     calculaPageRankDocumento(no->valor, numDocs); // Nó atual

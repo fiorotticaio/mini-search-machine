@@ -1,5 +1,6 @@
 #include "RBTpal.h"
 
+// Red-Black Tree de palavras
 struct noPal {
     int chave;
     char* valor;
@@ -71,8 +72,7 @@ bool ehVermelhoRBTpal(RBTpal* no) {
 
 void liberaNoRBTpal(RBTpal* no) {
     if (no == NULL) return;
-
-    free(no->valor);
+    if (no->valor!=NULL) free(no->valor);
     if (no->esq != NULL) liberaNoRBTpal(no->esq);
     if (no->dir != NULL) liberaNoRBTpal(no->dir);
     free(no);

@@ -1,7 +1,8 @@
 #include "RBTmain.h"
 
 
-struct noMain { // BRT
+// Red-Black Tree de possíveis buscas
+struct noMain { 
     char* chave;
     Doc** valor;
     int nDocs;
@@ -203,7 +204,7 @@ void promptPesquisa(RBTmain * T) {
     char * palavra = strtok(buscas, " ");
     Doc** resultadoFinal = NULL;
     int nmrResultados = 0;
-
+    bool buscaPorPalavraUnica = true;
     
     // Iterando por cada palavra da busca
     while(palavra) {
@@ -215,9 +216,12 @@ void promptPesquisa(RBTmain * T) {
 
         // Proxima palavra
         palavra = strtok(NULL, " ");
+
+        // Sinalizando que a busca tem mais de uma palavra, para tomar a melhor decisao ao desalocar mais tarde
+        if (palavra!=NULL) buscaPorPalavraUnica=false;
     }
 
-    // Definido Buffers para os nomes dos arquivos e os valores de page ranks que serão impressos
+    // Definido Buffer os valores de page ranks que serão impressos
     char * pageRanksArquivos = NULL;
 
     if (resultadoFinal != NULL)  {
@@ -227,7 +231,7 @@ void promptPesquisa(RBTmain * T) {
         
         printf("pages:");
 
-        // Iterando pelos resultados uma única vez, com ajuda de buffers
+        // Iterando pelos resultados uma única vez, com ajuda de buffer
         for(int i=0;i<nmrResultados;i++) {
             
             //FIXME: tem um erro de memcpy nesses buffers q eu ainda não consegui resolver...
@@ -252,7 +256,7 @@ void promptPesquisa(RBTmain * T) {
         else printf("\npr:%s\n", pageRanksArquivos);
 
         free(pageRanksArquivos);
-        // free(resultadoFinal); //FIXME: talvez tenha q ter isso, mas quando eu boto da erro
+        if (!buscaPorPalavraUnica) free(resultadoFinal);
     }
     
 }
@@ -320,9 +324,8 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
 
 void liberaNoRBTmain(RBTmain* no) {
     if (no == NULL) return;
-
-    free(no->chave);
-    free(no->valor);
+    if (no->chave!=NULL) free(no->chave);
+    if (no->valor!=NULL) free(no->valor);
     if (no->esq != NULL) liberaNoRBTmain(no->esq);
     if (no->dir != NULL) liberaNoRBTmain(no->dir);
     free(no);

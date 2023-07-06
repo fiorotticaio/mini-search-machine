@@ -112,11 +112,10 @@ char** leNomeDocumentos(char* dirEntrada, int* qtdDocs) {
 }
 
 void liberaNomeDocumentos(char** nomeDocumentos) {
+    if (nomeDocumentos==NULL) return;
+    
     int i = 0;
-    while (nomeDocumentos[i] != NULL) {
-        free(nomeDocumentos[i]);
-        i++;
-    }
+    while (nomeDocumentos[i++] != NULL) free(nomeDocumentos[i-1]);
     free(nomeDocumentos);
 }
 
