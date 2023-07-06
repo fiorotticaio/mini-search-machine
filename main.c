@@ -36,7 +36,8 @@ int main(int argc, char** argv) {
   // printRBTmain(T);
 
   /* =========== Prompt de Buscas ===========  */
-  while (1) promptPesquisa(T);
+  //TODO: colocar em loop
+  promptPesquisa(T);
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
