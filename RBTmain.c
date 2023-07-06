@@ -200,6 +200,7 @@ void promptPesquisa(RBTmain * T) {
     char buscas[100]; //TODO: valor 100 arbitrário
     printf("search:");
     scanf("%[^\n]", buscas);
+    scanf("%*c");
 
     char * palavra = strtok(buscas, " ");
     Doc** resultadoFinal = NULL;
