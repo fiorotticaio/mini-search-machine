@@ -194,21 +194,19 @@ bool promptPesquisa(RBTmain * T) {
     char* palavra = strtok(buscas, " ");
     Doc** resultadoFinal = NULL;
     int nmrResultados = 0;
-    bool buscaPorPalavraUnica = true;
+    RBTmain* resultadoPalavra = NULL;
     
     /* Iterando por cada palavra da busca */
     while (palavra) {
+
         /* Achando os nó da RBT com os documentos que contém a palavra atual */
-        RBTmain* resultadoPalavra = buscaRBTmain(T, palavra);
+        resultadoPalavra = buscaRBTmain(T, palavra);
 
         /* Fazendo a intersecção com os resultados anteriores */
         resultadoFinal = interseccao(resultadoFinal, resultadoPalavra, &nmrResultados);
 
         /* Proxima palavra */
         palavra = strtok(NULL, " ");
-
-        /* Sinalizando que a busca tem mais de uma palavra, para tomar a melhor decisao ao desalocar mais tarde */
-        if (palavra != NULL) buscaPorPalavraUnica = false;
 
         /* Caso tenha algum dos termo que não tenha sido achado, nem continua a procurar os outros */
         if (resultadoFinal==NULL) break;
@@ -255,12 +253,13 @@ bool promptPesquisa(RBTmain * T) {
         else                           printf("\npr:%s\n", pageRanksArquivos);
 
         free(pageRanksArquivos);
-        if (!buscaPorPalavraUnica) free(resultadoFinal);
     } else {
         printf("pages:\n");
         printf("pr:\n");
     }
 
+    free(resultadoFinal);
+    
     return true;
 }
 
@@ -269,13 +268,18 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
     /* Vetor de resultados anteriores está vazio, apenas copie o resultado atual */
     if (resultadoFinal == NULL && resultadoPalavra != NULL) {
         (*nmrResultados) = resultadoPalavra->nDocs;
-        return resultadoPalavra->valor;
+        Doc** novoResultado = malloc(sizeof(Doc*) * (*nmrResultados));
+        for (int i=0;i<(*nmrResultados);i++) novoResultado[i] = resultadoPalavra->valor[i];
+        return novoResultado;
     
     // Caso não tenha sido encontrada nenhuma palavra anteriormente e nem atualmente, retorne nulo
     } else if (resultadoFinal == NULL && resultadoPalavra != NULL) return NULL;
 
     // Caso não tenha sido encontrada nenhuma palavra atualmente, retorne NULL, já que não há intersecção
-    else if (resultadoPalavra==NULL) return NULL;
+    else if (resultadoPalavra==NULL) {
+        free(resultadoFinal);
+        return NULL;
+    }
 
     // Senão, crie um novo vetor para armazenar a intersecção
     int tamanhoMaximo = (*nmrResultados);
@@ -309,10 +313,10 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
         }
     }
 
-    //TODO: o vetor de resultados é maior doq realmente precisa, pq o tamanho mudou (intersecção),
-    //      mas fazer um realloc pode ser disperdicio de tempo
-
-    // Retornando novo vetor de resultados
+    /* Desalocando o vetor de resultados antigo */
+    free(resultadoFinal);
+    
+    /* Retornando novo vetor de resultados */
     return novoResultado;
 }
 

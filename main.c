@@ -38,7 +38,6 @@ int main(int argc, char** argv) {
   // printRBTmain(T);
 
   /* =========== Prompt de Buscas ===========  */
-  //TODO: colocar em loop
   bool continuaPromp = true;
   while(continuaPromp) continuaPromp=promptPesquisa(T);
 
