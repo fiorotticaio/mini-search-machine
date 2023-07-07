@@ -69,7 +69,7 @@ void printRBTmain(RBTmain* no);
 
 /// @brief Interação com o usuário para a pesquisa
 /// @param T 
-void promptPesquisa(RBTmain * T);
+bool promptPesquisa(RBTmain * T);
 
 /// @brief Faz a intersecção dos documentos de cada termo da pesquisa
 /// @param resultadoFinal 

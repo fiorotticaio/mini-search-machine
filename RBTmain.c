@@ -180,12 +180,16 @@ int comparaPageRankComDesempate(const void* a, const void* b) {
     return strcmp(getNomeDocumento(docA), getNomeDocumento(docB));
 }
 
-void promptPesquisa(RBTmain * T) {
+bool promptPesquisa(RBTmain * T) {
     /* Recebendo todas as palavras buscadas em um vetor */
     char buscas[100]; //TODO: valor 100 arbitrário
     printf("search:");
-    scanf("%[^\n]", buscas);
-    scanf("%*c"); // Limpando o buffer do scanf
+    
+    /* Testando condição de parada */
+    if (scanf("%[^\n]", buscas)<0) return false;
+    
+    /* Limpando o buffer do scanf */
+    scanf("%*c"); 
 
     char* palavra = strtok(buscas, " ");
     Doc** resultadoFinal = NULL;
@@ -205,6 +209,9 @@ void promptPesquisa(RBTmain * T) {
 
         /* Sinalizando que a busca tem mais de uma palavra, para tomar a melhor decisao ao desalocar mais tarde */
         if (palavra != NULL) buscaPorPalavraUnica = false;
+
+        /* Caso tenha algum dos termo que não tenha sido achado, nem continua a procurar os outros */
+        if (resultadoFinal==NULL) break;
     }
 
     /* Definido Buffer os valores de page ranks que serão impressos */
@@ -221,8 +228,6 @@ void promptPesquisa(RBTmain * T) {
         int i = 0;
         for (i = 0; i < nmrResultados; i++) {
             
-            // FIXME: tem um erro de memcpy nesses buffers q eu ainda não consegui resolver...
-
             /* Não precisa fazer um buffer com os nomes, só os pageranks */
             printf("%s ", getNomeDocumento(resultadoFinal[i]));
 
@@ -234,7 +239,7 @@ void promptPesquisa(RBTmain * T) {
                 pageRanksArquivos = strdup(aux);
             } else {
                 size_t newSize = strlen(aux) + strlen(pageRanksArquivos) + 2;
-                char* tempBuffer = malloc(newSize); // Buffer auxiliar para não precisar dar realloc diretamente no pageRanksArquivos
+                char* tempBuffer = malloc(newSize); 
                 if (tempBuffer == NULL) {
                     printf("Erro ao alocar memória para o buffer de page ranks\n");
                     exit(1);
@@ -251,7 +256,12 @@ void promptPesquisa(RBTmain * T) {
 
         free(pageRanksArquivos);
         if (!buscaPorPalavraUnica) free(resultadoFinal);
+    } else {
+        printf("pages:\n");
+        printf("pr:\n");
     }
+
+    return true;
 }
 
 Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResultados){
@@ -264,7 +274,10 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
     // Caso não tenha sido encontrada nenhuma palavra anteriormente e nem atualmente, retorne nulo
     } else if (resultadoFinal == NULL && resultadoPalavra != NULL) return NULL;
 
-    /* Senão, crie um novo vetor para armazenar a intersecção */
+    // Caso não tenha sido encontrada nenhuma palavra atualmente, retorne NULL, já que não há intersecção
+    else if (resultadoPalavra==NULL) return NULL;
+
+    // Senão, crie um novo vetor para armazenar a intersecção
     int tamanhoMaximo = (*nmrResultados);
     Doc** novoResultado = malloc(sizeof(Doc*) * tamanhoMaximo);
     (*nmrResultados) = 0;
@@ -277,12 +290,15 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
     while ((i < tamanhoMaximo) && (j < resultadoPalavra->nDocs)) {
         char* nomeDocAnterior = getNomeDocumento(resultadoFinal[i]);
         char* nomeDocAtual = getNomeDocumento(resultadoPalavra->valor[j]);
-        // Caso o page rank seja menor no vetor de resultados anteriores, incremente o ponteiro i 
+        
+        // Caso o nome do documento seja menor (alfabeticamente) no vetor de resultados anteriores, incremente o ponteiro i 
         if (strcmp(nomeDocAnterior, nomeDocAtual)<0) {
             i++;
-        // Caso o page rank seja menor no vetor de resultados atuais, incremente o ponteiro j
+        
+        // Caso o nome do documento seja menor (alfabeticamente) no vetor de resultados atuais, incremente o ponteiro j
         } else if (strcmp(nomeDocAnterior, nomeDocAtual)>0) {
             j++;
+        
         // Caso contrário, é uma intersecção, então adicione ao vetor e incremente todos os ponteiros
         } else {
             novoResultado[k] = resultadoFinal[i];
@@ -293,11 +309,10 @@ Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResu
         }
     }
 
-
     //TODO: o vetor de resultados é maior doq realmente precisa, pq o tamanho mudou (intersecção),
     //      mas fazer um realloc pode ser disperdicio de tempo
 
-    // Liberando o vetor antigo de resultados anterioress e retornando o novo
+    // Retornando novo vetor de resultados
     return novoResultado;
 }
 

@@ -1,9 +1,10 @@
 DIR_ENTRADA_0=exemplo0
-DIR_ENTRADA_1=exemplo
+DIR_ENTRADA_1=exemplo1
 DIR_ENTRADA_2=exemplo2
 
 # all: clean compile runAll valAll
-all: run0
+# all: run0
+all: clean compile
 
 compile: documento rbtDocs rbtPal rbtMain
 	@ gcc -o trab3 documento.o RBTdocs.o RBTpal.o RBTmain.o main.c
