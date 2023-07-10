@@ -8,6 +8,7 @@
 #include "documento.h"
 #include "RBTpal.h"
 #include "RBTdocs.h"
+#include "RBTgen.h"
 
 #define RED true
 #define BLACK false
@@ -52,7 +53,7 @@ RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor);
 /// @param stopWords 
 /// @param dirEntrada 
 /// @param T 
-void criaRBTpesquisa(RBTdocs* docs, RBTpal* stopWords, char* dirEntrada, RBTmain** T);
+void criaRBTpesquisa(RBTdocs* documentos, RBTgen* stopWords, char* dirEntrada, RBTmain** T);
 
 /// @brief Ordena os documentos de uma palavra de acordo com o page rank
 /// @param T 

@@ -9,6 +9,8 @@ struct noMain {
     RBTmain *esq, *dir;
 };
 
+
+
 int comparaLexicografico(const void* a, const void* b) {
     Doc* docA = *(Doc**) a;
     Doc* docB = *(Doc**) b;
@@ -103,7 +105,7 @@ RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor) {
     return no;
 }
 
-void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, RBTmain** T){
+void criaRBTpesquisa(RBTdocs* documentos, RBTgen* stopWords, char* dirEntrada, RBTmain** T){
     if (documentos == NULL) return;
 
     /* Percorrendo recursivamente o ramo da esquerda */

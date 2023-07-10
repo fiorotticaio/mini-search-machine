@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "documento.h"
+#include "RBTgen.h"
 #include "RBTpal.h"
 #include "RBTdocs.h"
+
 #include "RBTmain.h"
 
 int main(int argc, char** argv) {
@@ -21,7 +23,7 @@ int main(int argc, char** argv) {
   /*========== Leitura dos dados de entrada ==========*/
   int qtdDocs = 0;
   char** nomeDocumentos = leNomeDocumentos(diretorio, &qtdDocs);
-  RBTpal* S = leStopWords(diretorio);
+  RBTgen* S = leStopWords(diretorio);
   RBTdocs* documentos = leDocumentos(nomeDocumentos, qtdDocs, diretorio);
   linkaDocumentos(documentos, diretorio);
 

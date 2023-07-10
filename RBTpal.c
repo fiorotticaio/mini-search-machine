@@ -1,83 +1,35 @@
 #include "RBTpal.h"
 
 /* Red-Black Tree de palavras (para as stopwords) */
-struct noPal {
-    char* chave;
-    // Não precisa de valor
-    bool cor;
-    RBTpal *esq, *dir;
-};
 
-RBTpal* criaNoRBTpal(char* chave) {
-    RBTpal* no = (RBTpal*) malloc(sizeof(RBTpal));
-    no->chave = strdup(chave);
-    no->cor = RED;
-    no->esq = no->dir = NULL;
-    return no;
+int comparaString(void* a, void* b){
+    return strcmp((char*)a, (char*)b);
 }
 
-RBTpal* rotacionaEsqRBTpal(RBTpal* no) {
-    RBTpal* x = no->dir;
-    no->dir = x->esq;
-    x->esq = no;
-    x->cor = x->esq->cor;
-    x->esq->cor = RED;
-    return x;
+RBTgen* criaNoRBTpal(char* chave) {
+    return criaNoRBTgen(strdup(chave));
 }
 
-RBTpal* rotacionaDirRBTpal(RBTpal *no) {
-    RBTpal* x = no->esq;
-    no->esq = x->dir;
-    x->dir = no;
-    x->cor = x->dir->cor;
-    x->dir->cor = RED;
-    return x;
-}
-
-void trocaCorRBTpal(RBTpal* no) {
-    no->cor = RED;
-    no->esq->cor = BLACK;
-    no->dir->cor = BLACK;
-}
-
-char* buscaRBTPal(RBTpal* n, char* chave) {
-    while (n != NULL) {
-        int cmp = strcmp(chave, n->chave);
-        if      (cmp < 0)   n = n->esq;
-        else if (cmp > 0)   n = n->dir;
-        else /* cmp == 0 */ return n->chave;
-    }
+char* buscaRBTPal(RBTgen* n, char* chave) {
+    if(buscaRBTgen(n, chave, comparaString) != NULL) 
+        return chave;
     return NULL;
 }
 
-RBTpal* insereRBTpal(RBTpal* no, char* chave) {
-    if (no == NULL) return criaNoRBTpal(chave);
-
-    int cmp = strcmp(chave, no->chave);
-    if      (cmp < 0)   no->esq = insereRBTpal(no->esq, chave);
-    else if (cmp > 0)   no->dir = insereRBTpal(no->dir, chave);
-
-    if (ehVermelhoRBTpal(no->dir) && !ehVermelhoRBTpal(no->esq))     no = rotacionaEsqRBTpal(no);
-    if (ehVermelhoRBTpal(no->esq) && ehVermelhoRBTpal(no->esq->esq)) no = rotacionaDirRBTpal(no);
-    if (ehVermelhoRBTpal(no->esq) && ehVermelhoRBTpal(no->dir))      trocaCorRBTpal(no);
-
-    return no;
+RBTgen* insereRBTpal(RBTgen* no, char* chave) {
+    return insereRBTgen(no, chave, comparaString);
 }
 
-bool ehVermelhoRBTpal(RBTpal* no) {
-    if (no == NULL) return BLACK;
-    return no->cor == RED;
+void liberaDadosNo(void *info){
+    free(info);
+    return;
 }
 
-void liberaNoRBTpal(RBTpal* no) {
-    if (no == NULL) return;
-    if (no->chave!=NULL) free(no->chave);
-    if (no->esq != NULL) liberaNoRBTpal(no->esq);
-    if (no->dir != NULL) liberaNoRBTpal(no->dir);
-    free(no);
+void liberaNoRBTpal(RBTgen* no) {
+    liberaNoRBTgen(no, liberaDadosNo);
 }
 
-RBTpal* leStopWords(char* dirEntrada) {
+RBTgen* leStopWords(char* dirEntrada) {
     /* Criando diretório do arquivo stopwords.txt */
     char stopWordsDir[100];
     sprintf(stopWordsDir, "%s/stopwords.txt", dirEntrada);
@@ -89,7 +41,7 @@ RBTpal* leStopWords(char* dirEntrada) {
     }
 
     int chaveStopWord = 0;
-    RBTpal* stopWords = NULL; // Raiz da árvore
+    RBTgen* stopWords = NULL; // Raiz da árvore
 
     while (!feof(stopWordsArq)) {
         char stopWord[100]; // Variável auxiliar para leitura

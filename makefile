@@ -7,7 +7,7 @@ DIR_ENTRADA_2=exemplo2
 all: clean compile
 
 compile: documento rbtDocs rbtPal rbtMain rbtGen
-	@ gcc -o trab3 documento.o RBTdocs.o RBTpal.o RBTmain.o main.c RBTgen.o
+	@ gcc -o trab3 documento.o RBTgen.o RBTdocs.o RBTpal.o RBTmain.o main.c 
 
 documento:
 	@ gcc -c documento.c

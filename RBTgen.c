@@ -1,16 +1,8 @@
 #include "RBTgen.h"
 
-typedef struct st_Main Data_main;
-
-struct st_Main{
-    char* chave;
-    Doc** valor;
-    int nDocs;
-};
-
 
 // Red-Black Tree de possíveis buscas //
-struct noMain { 
+struct noGen { 
     void   *info;
     bool    cor;
     RBTgen *esq, *dir;
@@ -92,9 +84,17 @@ bool ehVermelhoRBTgen(RBTgen* no) {
 
 
 
-void percorreRBTgen(RBTgen* no, void (*cb) (void*) ) {
+void percorreRBTgen(RBTgen* no, void (*cb) (void*)) {
     if (no == NULL) return;
     percorreRBTgen(no->esq, cb);
-    cb(no);
+    cb(no->info);
     percorreRBTgen(no->dir, cb);
+}
+
+void liberaNoRBTgen(RBTgen* no, void (*cb) (void*)) {
+    if (no == NULL) return;
+    cb(no->info);
+    if (no->esq != NULL) liberaNoRBTgen(no->esq, cb);
+    if (no->dir != NULL) liberaNoRBTgen(no->dir, cb);
+    free(no);
 }

@@ -1,19 +1,16 @@
-#ifndef RBT_MAIN_H
-#define RBT_MAIN_H
+#ifndef RBT_GEN_H
+#define RBT_GEN_H
 
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "documento.h"
-#include "RBTpal.h"
-#include "RBTdocs.h"
+
 
 #define RED true
 #define BLACK false
 
-typedef struct noMain RBTgen;
-
+typedef struct noGen RBTgen;
 
 
 /// @brief Cria um novo no da arvore Árvore Rubro-Negra principal
@@ -59,4 +56,6 @@ bool ehVermelhoRBTgen(RBTgen* no);
 /// @param função trata dados
 void percorreRBTgen(RBTgen* no, void (*cb) (void*) );
 
-#endif // RBT_MAIN_H
+void liberaNoRBTgen(RBTgen* no, void (*cb) (void*));
+
+#endif // RBT_GEN_H
