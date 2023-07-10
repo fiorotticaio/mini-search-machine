@@ -3,14 +3,16 @@
 
 // Red-Black Tree de possíveis buscas //
 struct noGen { 
+    void   *chave;
     void   *info;
     bool    cor;
     RBTgen *esq, *dir;
 };
 
 
-RBTgen* criaNoRBTgen(void *info) {
+RBTgen* criaNoRBTgen(void* chave, void *info) {
     RBTgen* no = (RBTgen*) malloc(sizeof(RBTgen));
+    no->chave  = chave;
     no->info   = info;
     no->cor    = RED;
     no->esq    = no->dir = NULL;
@@ -44,7 +46,7 @@ void trocaCorRBTgen(RBTgen* no) {
 RBTgen* buscaRBTgen(RBTgen* n, void* chave, int (*cb) (void*, void*)) {
     
     while (n != NULL) {
-        int cmp = cb(chave, n->info);
+        int cmp = cb(chave, n->chave);
         
         if      (cmp < 0) n = n->esq;
         else if (cmp > 0) n = n->dir;
@@ -53,20 +55,20 @@ RBTgen* buscaRBTgen(RBTgen* n, void* chave, int (*cb) (void*, void*)) {
     return NULL;
 }
 
-RBTgen* insereRBTgen(RBTgen* no, void* data, int (*cb) (void*, void*)){
+RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*), int (*cbDado) (RBTgen*, void*)){
     // Caso nó seja NULO, não há chave, então crie //
-    if (no == NULL) return criaNoRBTgen(data);
+    if (no == NULL) return criaNoRBTgen(chave, dado);
 
-    int cmp = cb(data , no->info);
+    int cmp = cb(chave , no->chave);
     // Caso chave seja menor, vá p esquerda, caso for maior, vá p direita, senão substitui //
-    if      (cmp < 0) no->esq = insereRBTgen(no->esq, data, cb);
-    else if (cmp > 0) no->dir = insereRBTgen(no->dir, data, cb);
+    if      (cmp < 0) no->esq = insereRBTgen(no->esq, chave, dado, cb, cbDado);
+    else if (cmp > 0) no->dir = insereRBTgen(no->dir, chave, dado, cb, cbDado);
     else {
         // Verificando se o documento já não está associado à essa chave //
-        if(cb(no, data))    return 0;
+        if(cbDado(no, dado)) return no;
         
         // Caso não esteja, insira-o na árvore //
-        no->info = data;
+        no->info = dado;
     }
 
     // Linhas que demoraram 30 anos para serem feitas pelo Sedwick (conserta RBT ao inserir) //

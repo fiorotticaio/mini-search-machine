@@ -16,7 +16,7 @@ typedef struct noGen RBTgen;
 /// @brief Cria um novo no da arvore Árvore Rubro-Negra principal
 /// @param dado  
 /// @return Nó criado
-RBTgen* criaNoRBTgen(void *info);
+RBTgen* criaNoRBTgen(void* chave, void *info);
 
 /// @brief Rotaciona o nó para a esquerda
 /// @param no 
@@ -44,7 +44,7 @@ RBTgen* buscaRBTgen(RBTgen* n, void* chave, int (*cb) (void*, void*));
 /// @param chave 
 /// @param função callback verifica se já existe valor asssociado a chave 
 /// @return Árvore com o novo nó inserido
-RBTgen* insereRBTgen(RBTgen* no, void* data, int (*cb) (void*, void*));
+RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*), int (*cbDado) (RBTgen*, void*));
 
 /// @brief Verifica se o nó é vermelho
 /// @param no 

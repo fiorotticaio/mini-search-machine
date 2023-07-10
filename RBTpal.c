@@ -7,7 +7,7 @@ int comparaString(void* a, void* b){
 }
 
 RBTgen* criaNoRBTpal(char* chave) {
-    return criaNoRBTgen(strdup(chave));
+    return criaNoRBTgen(strdup(chave), NULL);
 }
 
 char* buscaRBTPal(RBTgen* n, char* chave) {
@@ -16,8 +16,12 @@ char* buscaRBTPal(RBTgen* n, char* chave) {
     return NULL;
 }
 
+int funcFalse(RBTgen *a, void *b){
+    return 0;
+}
+
 RBTgen* insereRBTpal(RBTgen* no, char* chave) {
-    return insereRBTgen(no, chave, comparaString);
+    return insereRBTgen(no, chave, NULL, comparaString, funcFalse);
 }
 
 void liberaDadosNo(void *info){
