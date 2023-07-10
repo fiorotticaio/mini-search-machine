@@ -9,6 +9,24 @@ struct noGen {
     RBTgen *esq, *dir;
 };
 
+void* retornaInfo(RBTgen* no){
+    return no->info;
+}
+void* retornaChave(RBTgen* no){
+    return no->info;
+}
+
+RBTgen* retornaEsq(RBTgen* no){
+    return no->esq;
+}
+
+RBTgen* retornaDir(RBTgen* no){
+    return no->dir;
+}
+
+int comparaString(void* a, void* b){
+    return strcmp((char*)a, (char*)b);
+}
 
 RBTgen* criaNoRBTgen(void* chave, void *info) {
     RBTgen* no = (RBTgen*) malloc(sizeof(RBTgen));

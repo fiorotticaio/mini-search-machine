@@ -1,13 +1,12 @@
 #include "RBTmain.h"
 
 /* Red-Black Tree de possíveis buscas */
-struct noMain { 
-    char* chave;
-    Doc** valor;
-    int nDocs;
-    bool cor;
-    RBTmain *esq, *dir;
+
+struct infoMain {
+    Doc **valor;
+    int   nDocs;
 };
+
 
 
 
@@ -17,43 +16,23 @@ int comparaLexicografico(const void* a, const void* b) {
     return strcmp(getNomeDocumento(docA), getNomeDocumento(docB));
 }
 
-RBTmain* criaNoRBTmain(char* chave, Doc* valor) {
-    RBTmain* no = (RBTmain*) malloc(sizeof(RBTmain));
-    Doc** docs = (Doc**) malloc(sizeof(Doc*));
-    docs[0] = valor;
-    no->chave = strdup(chave);
-    no->valor = docs;
-    no->cor = RED;
-    no->esq = no->dir = NULL;
-    no->nDocs = 1;
-    return no;
+RBTgen* criaNoRBTmain(char* chave, Doc* valor) {
+
+    InfoMain* info = (InfoMain*)malloc(sizeof(InfoMain));
+    Doc**     docs = (Doc**)    malloc(sizeof(Doc*));
+    
+    info->valor[0] = valor;
+    info->nDocs =    1;
+
+    return criaNoRBTgen(strdup(chave), info);
 }
 
-RBTmain* rotacionaEsqRBTmain(RBTmain* no) {
-    RBTmain* x = no->dir;
-    no->dir = x->esq;
-    x->esq = no;
-    x->cor = x->esq->cor;
-    x->esq->cor = RED;
-    return x;
+int comparaDadosMain(void *a, void* b){
+    InfoMain* info = (InfoMain*)b;
+    return strcmp((char*)a, info->valor)
 }
 
-RBTmain* rotacionaDirRBTmain(RBTmain *no) {
-    RBTmain* x = no->esq;
-    no->esq = x->dir;
-    x->dir = no;
-    x->cor = x->dir->cor;
-    x->dir->cor = RED;
-    return x;
-}
-
-void trocaCorRBTmain(RBTmain* no) {
-    no->cor = RED;
-    no->esq->cor = BLACK;
-    no->dir->cor = BLACK;
-}
-
-RBTmain* buscaRBTmain(RBTmain* n, char* chave) {
+RBTgen* buscaRBTmain(RBTgen* n, char* chave) {
     char* chaveLower = strdup(chave);  // Cria uma cópia da chave
 
     int i = 0;
@@ -61,24 +40,38 @@ RBTmain* buscaRBTmain(RBTmain* n, char* chave) {
         chaveLower[i] = tolower(chaveLower[i]);  // Converte para minúsculo
     }
 
-    while (n != NULL) {
-        int cmp = strcmp(chaveLower, n->chave);
-        if      (cmp < 0) n = n->esq;
-        else if (cmp > 0) n = n->dir;
-        else { // Encontrou
-            free(chaveLower);
-            return n;
-        }
-    }
+    RBTgen* r = buscaRBTmain(n, chaveLower);
     free(chaveLower);
-    return NULL;
+    return r;
 }
+int retornaNdocs(InfoMain *info){
+    if(info != NULL) 
+        return info->nDocs;
+    return 0;
+}    
+Doc* retornaDoc(InfoMain *info, int i){
+    return info->valor[i];
+}
+/*
+int verificaDocJaPertence(RBTgen* no, void* info){
+    InfoMain* infoM = (InfoMain*)info;
 
-RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor) {
+    int i = 0;
+    int N = retornaNdocs(retornaInfo(no));
+    
+    for (i = 0; i < N; i++) {
+        char* nomeDocNaArvore = getNomeDocumento(retornaDoc(retornaInfo(no), i));
+        char* nomeDocAInserir = getNomeDocumento(infoM->valor);
+        if (strcmp(nomeDocAInserir, nomeDocNaArvore) == 0) return 1;
+    }
+    return 0;
+}*/
+
+RBTgen* insereRBTmain(RBTgen* no, char* chave, Doc* valor) {
     /* Caso nó seja NULO, não há chave, então crie */
     if (no == NULL) return criaNoRBTmain(chave, valor);
 
-    int cmp = strcmp(chave, no->chave);
+    int cmp = strcmp(chave, (char*)retornaChave(no));
     /* Caso chave seja menor, vá p esquerda, caso for maior, vá p direita, senão substitui */
     if      (cmp < 0) no->esq = insereRBTmain(no->esq, chave, valor);
     else if (cmp > 0) no->dir = insereRBTmain(no->dir, chave, valor);

@@ -2,9 +2,7 @@
 
 /* Red-Black Tree de palavras (para as stopwords) */
 
-int comparaString(void* a, void* b){
-    return strcmp((char*)a, (char*)b);
-}
+
 
 RBTgen* criaNoRBTpal(char* chave) {
     return criaNoRBTgen(strdup(chave), NULL);

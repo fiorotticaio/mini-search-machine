@@ -3,128 +3,65 @@
 #include <stdio.h>
 
 /* Red-Black Tree de Documentos/Páginas */
-struct noDocs { 
-    char* chave;
-    Doc* valor;
-    bool cor;
-    RBTdocs *esq, *dir;
-};
 
-RBTdocs* criaNoRBTdocs(char* chave, Doc* valor) {
-    RBTdocs* no = (RBTdocs*) malloc(sizeof(RBTdocs));
-    no->chave = strdup(chave);
-    no->valor = valor;
-    no->cor = RED;
-    no->esq = no->dir = NULL;
-    return no;
+int comparaString(void* a, void* b){
+    return strcmp((char*)a, (char*)b);
 }
 
-RBTdocs* rotacionaEsqRBTdocs(RBTdocs* no) {
-    RBTdocs* x = no->dir;
-    no->dir = x->esq;
-    x->esq = no;
-    x->cor = x->esq->cor;
-    x->esq->cor = RED;
-    return x;
+RBTgen* criaNoRBTdocs(char* chave, Doc* valor) {
+    return criaNoRBTgen(strdup(chave), valor);
 }
 
-RBTdocs* rotacionaDirRBTdocs(RBTdocs *no) {
-    RBTdocs* x = no->esq;
-    no->esq = x->dir;
-    x->dir = no;
-    x->cor = x->dir->cor;
-    x->dir->cor = RED;
-    return x;
-}
-
-void trocaCorRBTdocs(RBTdocs* no) {
-    no->cor = RED;
-    no->esq->cor = BLACK;
-    no->dir->cor = BLACK;
-}
-
-Doc* buscaRBTdocs(RBTdocs* n, char* chave) {
-    while (n != NULL) {
-        int cmp = strcmp(chave, n->chave);
-        if      (cmp < 0)   n = n->esq;
-        else if (cmp > 0)   n = n->dir;
-        else /* cmp == 0 */ return n->valor;
-    }
+Doc* buscaRBTdocs(RBTgen* n, char* chave) {
+    RBTgen* no = buscaRBTgen(n, chave, comparaString);
+    if(no != NULL) 
+        return retornaInfo(no);
     return NULL;
+
 }
 
-RBTdocs* insereRBTdocs(RBTdocs* no, char* chave, Doc* valor) {
-    if (no == NULL) return criaNoRBTdocs(chave, valor);
-
-    int cmp = strcmp(chave, no->chave);
-    if      (cmp < 0)   no->esq = insereRBTdocs(no->esq, chave, valor);
-    else if (cmp > 0)   no->dir = insereRBTdocs(no->dir, chave, valor);
-    else /* cmp == 0 */ no->valor = valor;
-
-    if (ehVermelhoRBTdocs(no->dir) && !ehVermelhoRBTdocs(no->esq))     no = rotacionaEsqRBTdocs(no);
-    if (ehVermelhoRBTdocs(no->esq) && ehVermelhoRBTdocs(no->esq->esq)) no = rotacionaDirRBTdocs(no);
-    if (ehVermelhoRBTdocs(no->esq) && ehVermelhoRBTdocs(no->dir))      trocaCorRBTdocs(no);
-
-    return no;
+int funcFalse(RBTgen *a, void *b){
+    return 0;
 }
 
-bool ehVermelhoRBTdocs(RBTdocs* no) {
-    if (no == NULL) return BLACK;
-    return no->cor == RED;
+RBTgen* insereRBTdocs(RBTgen* no, char* chave, Doc* valor) {
+    return insereRBTgen(no, chave, valor, comparaString, funcFalse);
 }
 
-void printRBTdocs(RBTdocs* no) {
-    if (no == NULL) return;
 
-    printRBTdocs(no->esq);
-    imprimeDocumento(no->valor);
-    printf("\n\n");
-    printRBTdocs(no->dir);
+void printRBTdocs(RBTgen* no) {
+    percorreRBTgen(no, imprimeDocumento);
 }
 
-void liberaNoRBTdocs(RBTdocs* no) {
-    if (no==NULL) return;
-    if (no->chave != NULL) free(no->chave);
-    if (no->valor != NULL) liberaDocumento(no->valor);
-    if (no->esq != NULL) liberaNoRBTdocs(no->esq);
-    if (no->dir != NULL) liberaNoRBTdocs(no->dir);
-    free(no);
+void liberaDadosRBTdocs(void *dados){
+    if(retornaChave(dados) != NULL) free(retornaChave(dados));
+    if(retornaInfo (dados) != NULL) liberaDocumento(retornaInfo (dados));
+    return;
 }
 
-RBTdocs* getEsq(RBTdocs* no){
-    return no->esq;
+void liberaNoRBTdocs(RBTgen* no) {
+    liberaNoRBTgen(no, liberaDadosRBTdocs);
 }
 
-RBTdocs* getDir(RBTdocs* no){
-    return no->dir;
-}
-
-Doc* getValor(RBTdocs* no){
-    return no->valor;
-}
-
-char* getChave(RBTdocs* no){
-    return no->chave;
-}
 
 /* Função recursiva */
-static long double getDifPageRank(RBTdocs* no) {
+static long double getDifPageRank(RBTgen* no) {
     if (no == NULL) return 0;
 
     long double somatorio = 0.0;
-    somatorio += getDifPageRank(no->esq);
+    somatorio += getDifPageRank(retornaEsq(no));
 
     /* Nó atual */
-    long double dif = (getPageRankAtualDocumento(no->valor) - getPageRankAnteriorDocumento(no->valor));
+    long double dif = (getPageRankAtualDocumento(retornaInfo(no)) - getPageRankAnteriorDocumento(retornaInfo(no)));
     if (dif < 0) dif *= -1; // Pegar o módulo
     somatorio += dif;
-    setPageRankAnteriorDocumento(no->valor, getPageRankAtualDocumento(no->valor)); // Atualiza o page rank anterior
+    setPageRankAnteriorDocumento(retornaInfo(no), getPageRankAtualDocumento(retornaInfo(no))); // Atualiza o page rank anterior
 
-    somatorio += getDifPageRank(no->dir);
+    somatorio += getDifPageRank(retornaDir(no));
     return somatorio;
 }
 
-static int terminouCalculoPageRank(RBTdocs* no, int numDocs) {
+static int terminouCalculoPageRank(RBTgen* no, int numDocs) {
     long double E = 0.0, somatorio = 0.0;
     somatorio = getDifPageRank(no);
     E = (long double) somatorio / numDocs;
@@ -132,14 +69,14 @@ static int terminouCalculoPageRank(RBTdocs* no, int numDocs) {
 }
 
 /* Função recursiva */
-static void calcPG(RBTdocs* no, int numDocs) {
+static void calcPG(RBTgen* no, int numDocs) {
     if (no == NULL) return;
-    calcPG(no->esq, numDocs);
-    calculaPageRankDocumento(no->valor, numDocs); // Nó atual
-    calcPG(no->dir, numDocs);
+    calcPG(retornaEsq(no), numDocs);
+    calculaPageRankDocumento(retornaInfo(no), numDocs); // Nó atual
+    calcPG(retornaDir(no), numDocs);
 }
 
-void calculaPageRankRBTdocs(RBTdocs* no, int numDocs) {
+void calculaPageRankRBTgen(RBTgen* no, int numDocs) {
     if (no == NULL) return;
     int k = 0;
     do {

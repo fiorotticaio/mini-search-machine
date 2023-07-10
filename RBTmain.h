@@ -13,7 +13,7 @@
 #define RED true
 #define BLACK false
 
-typedef struct noMain RBTmain;
+typedef struct infoMain InfoMain;
 
 /// @brief Cria um novo no da arvore Árvore Rubro-Negra principal
 /// @param chave 

@@ -13,6 +13,21 @@
 typedef struct noGen RBTgen;
 
 
+
+
+
+void* retornaInfo(RBTgen* no);
+
+void* retornaChave(RBTgen* no);
+
+RBTgen* retornaEsq(RBTgen* no);
+
+RBTgen* retornaDir(RBTgen* no);
+
+int comparaString(void* a, void* b);
+
+
+
 /// @brief Cria um novo no da arvore Árvore Rubro-Negra principal
 /// @param dado  
 /// @return Nó criado

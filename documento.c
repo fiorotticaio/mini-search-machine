@@ -62,7 +62,8 @@ void liberaDocumento(Doc* documento) {
     free(documento);
 }
 
-void imprimeDocumento(Doc* doc) {
+void imprimeDocumento(void *info) {
+    Doc* doc = (Doc*)info;
     printf("nome: %s\n", doc->nome);
     printf("page rank: %.5Lf\n", doc->pageRankAtual);    
     printf("num links out: %d\n", doc->numLinksOut);
@@ -118,7 +119,7 @@ void liberaNomeDocumentos(char** nomeDocumentos) {
     free(nomeDocumentos);
 }
 
-RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
+RBTgen* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
     /* Abrindo o diretório principal de páginas */
     char dirDocs[100];
     sprintf(dirDocs, "%s/pages", dirEntrada);
@@ -130,7 +131,7 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
         exit(1);
     }
 
-    RBTdocs* documentos = NULL;
+    RBTgen* documentos = NULL;
     int i = 0;
     
     /* Criando uma struct Doc para cada página no diretório e inserindo na RBTdocs */
@@ -144,7 +145,7 @@ RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada) {
     return documentos;
 }
 
-void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
+void linkaDocumentos(RBTgen* documentos, char* dirEntrada) {
     /* Recebendo o diretório com as ligações entre as páginas */
     char dirGrafo[100];
     sprintf(dirGrafo, "%s/graph.txt", dirEntrada);

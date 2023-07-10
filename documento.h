@@ -4,11 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "RBTgen.h"
 
 #define DIF_LIMITE_PR 0.000001 // 10^-6  
 #define ALFA_PR 0.85
 
-typedef struct noDocs RBTdocs;
 
 typedef struct documento Doc;
 
@@ -75,7 +75,7 @@ void liberaDocumento(Doc* documento);
 
 /// @brief Imprime o documento
 /// @param doc 
-void imprimeDocumento(Doc* doc);
+void imprimeDocumento(void *info);
 
 /// @brief Lê os nomes dos documentos
 /// @param dirEntrada 
@@ -92,12 +92,12 @@ void liberaNomeDocumentos(char** nomeDocumentos);
 /// @param numDocs 
 /// @param dirEntrada 
 /// @return Red Black Tree com os documentos
-RBTdocs* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada);
+RBTgen* leDocumentos(char** nomeDocumentos, int numDocs, char* dirEntrada);
 
 /// @brief Linka cada documento com seus links in e links out
 /// @param documentos 
 /// @param dirEntrada 
-void linkaDocumentos(RBTdocs* documentos, char* dirEntrada);
+void linkaDocumentos(RBTgen* documentos, char* dirEntrada);
 
 /// @brief Calcula o page rank do documento
 /// @param doc
