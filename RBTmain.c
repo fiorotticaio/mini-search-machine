@@ -182,16 +182,23 @@ int comparaPageRankComDesempate(const void* a, const void* b) {
 
 bool promptPesquisa(RBTmain * T) {
     /* Recebendo todas as palavras buscadas em um vetor */
-    char buscas[100]; //TODO: valor 100 arbitrário
     printf("search:");
-    
-    /* Testando condição de parada */
-    if (scanf("%[^\n]", buscas)<0) return false;
-    
-    /* Limpando o buffer do scanf */
-    scanf("%*c"); 
+    char * buscas = NULL;
+    size_t size = 0;
+    size_t lido = getline(&buscas, &size, stdin);
 
-    char* palavra = strtok(buscas, " ");
+    /* Tratando caso seja recebido o caractere de "fim do arquivo" */
+    if (lido==EOF) {
+        free(buscas);
+        return false;
+    }
+    
+
+    /* Retirando o \n do final da busca */
+    char* palavra = strtok(buscas, "\n");
+
+    /* Pegando cada palavra separada por espaço */
+    palavra = strtok(palavra, " ");
     Doc** resultadoFinal = NULL;
     int nmrResultados = 0;
     RBTmain* resultadoPalavra = NULL;
@@ -259,6 +266,7 @@ bool promptPesquisa(RBTmain * T) {
     }
 
     free(resultadoFinal);
+    free(buscas);
     
     return true;
 }
