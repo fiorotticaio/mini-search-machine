@@ -6,8 +6,8 @@ DIR_ENTRADA_2=exemplo2
 # all: run0
 all: clean compile
 
-compile: documento rbtDocs rbtPal rbtMain
-	@ gcc -o trab3 documento.o RBTdocs.o RBTpal.o RBTmain.o main.c
+compile: documento rbtDocs rbtPal rbtMain TST
+	@ gcc -o trab3 documento.o RBTdocs.o RBTpal.o RBTmain.o TST.o main.c 
 
 documento:
 	@ gcc -c documento.c
@@ -20,6 +20,9 @@ rbtPal:
 
 rbtMain:
 	@ gcc -c RBTmain.c
+
+TST:
+	@ gcc -c TST.c
 
 run0: clean compile
 	@ ./trab3 ${DIR_ENTRADA_0}

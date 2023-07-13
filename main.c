@@ -3,6 +3,7 @@
 #include "RBTpal.h"
 #include "RBTdocs.h"
 #include "RBTmain.h"
+#include "TST.h"
 
 int main(int argc, char** argv) {
   /**
@@ -33,13 +34,20 @@ int main(int argc, char** argv) {
   criaRBTpesquisa(documentos,  S, diretorio, &T);
   ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
 
+  TST* Tst = NULL;
+  Tst = criaTSTpesquisa(documentos, S, diretorio, Tst);
+  Tst = ordenaValuesPorPageRankTST(Tst);
+
   /*========== Debug ==========*/
   // printRBTdocs(documentos);
   // printRBTmain(T);
 
   /* =========== Prompt de Buscas ===========  */
+  // bool continuaPromp = true;
+  // while(continuaPromp) continuaPromp=promptPesquisa(T);
+
   bool continuaPromp = true;
-  while(continuaPromp) continuaPromp=promptPesquisa(T);
+  while(continuaPromp) continuaPromp=promptPesquisaTST(Tst);
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
