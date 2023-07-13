@@ -3,6 +3,7 @@
 #include "RBTgen.h"
 #include "RBTpal.h"
 #include "RBTdocs.h"
+#include "TST.h"
 
 #include "RBTmain.h"
 
@@ -34,6 +35,9 @@ int main(int argc, char** argv) {
   RBTmain* T = NULL;
   criaRBTpesquisa(documentos,  S, diretorio, &T);
   ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
+
+  //TST *T = NULL;
+
 
   /*========== Debug ==========*/
   // printRBTdocs(documentos);
