@@ -14,12 +14,12 @@ char* buscaRBTPal(RBTgen* n, char* chave) {
     return NULL;
 }
 
-int funcFalse(RBTgen *a, void *b){
-    return 0;
+void* RetornaDadoPal (RBTgen* r, void *info){
+    return info;
 }
 
 RBTgen* insereRBTpal(RBTgen* no, char* chave) {
-    return insereRBTgen(no, chave, NULL, comparaString, funcFalse);
+    return insereRBTgen(no, chave, NULL, comparaString, funcFalse, RetornaDadoPal);
 }
 
 void liberaDadosNo(void *info){

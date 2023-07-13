@@ -13,7 +13,7 @@ void* retornaInfo(RBTgen* no){
     return no->info;
 }
 void* retornaChave(RBTgen* no){
-    return no->info;
+    return no->chave;
 }
 
 RBTgen* retornaEsq(RBTgen* no){
@@ -22,6 +22,18 @@ RBTgen* retornaEsq(RBTgen* no){
 
 RBTgen* retornaDir(RBTgen* no){
     return no->dir;
+}
+
+void RBTgenSetEsq(RBTgen* no, RBTgen* esq){
+    no->esq = esq;
+}
+
+void RBTgenSetDir(RBTgen* no, RBTgen* dir){
+    no->dir = dir;
+}
+
+int funcFalse(RBTgen *a, void *b){
+    return 0;
 }
 
 int comparaString(void* a, void* b){
@@ -73,20 +85,20 @@ RBTgen* buscaRBTgen(RBTgen* n, void* chave, int (*cb) (void*, void*)) {
     return NULL;
 }
 
-RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*), int (*cbDado) (RBTgen*, void*)){
+RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*), int (*cbDado) (RBTgen*, void*), void* (*cbALocaDado) (RBTgen*, void *)){
     // Caso nó seja NULO, não há chave, então crie //
     if (no == NULL) return criaNoRBTgen(chave, dado);
 
     int cmp = cb(chave , no->chave);
     // Caso chave seja menor, vá p esquerda, caso for maior, vá p direita, senão substitui //
-    if      (cmp < 0) no->esq = insereRBTgen(no->esq, chave, dado, cb, cbDado);
-    else if (cmp > 0) no->dir = insereRBTgen(no->dir, chave, dado, cb, cbDado);
+    if      (cmp < 0) no->esq = insereRBTgen(no->esq, chave, dado, cb, cbDado, cbALocaDado);
+    else if (cmp > 0) no->dir = insereRBTgen(no->dir, chave, dado, cb, cbDado, cbALocaDado);
     else {
         // Verificando se o documento já não está associado à essa chave //
         if(cbDado(no, dado)) return no;
         
         // Caso não esteja, insira-o na árvore //
-        no->info = dado;
+        no->info = cbALocaDado(no, dado);
     }
 
     // Linhas que demoraram 30 anos para serem feitas pelo Sedwick (conserta RBT ao inserir) //
@@ -96,13 +108,10 @@ RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*
     return no;
 }
 
-
 bool ehVermelhoRBTgen(RBTgen* no) {
     if (no == NULL) return BLACK;
     return no->cor == RED;
 }
-
-
 
 void percorreRBTgen(RBTgen* no, void (*cb) (void*)) {
     if (no == NULL) return;
@@ -113,8 +122,10 @@ void percorreRBTgen(RBTgen* no, void (*cb) (void*)) {
 
 void liberaNoRBTgen(RBTgen* no, void (*cb) (void*)) {
     if (no == NULL) return;
-    cb(no->info);
-    if (no->esq != NULL) liberaNoRBTgen(no->esq, cb);
-    if (no->dir != NULL) liberaNoRBTgen(no->dir, cb);
+
+    if (no->esq   != NULL) liberaNoRBTgen(no->esq, cb);
+    cb (no->info);
+    if (no->chave != NULL) free(no->chave);
+    if (no->dir   != NULL) liberaNoRBTgen(no->dir, cb);
     free(no);
 }

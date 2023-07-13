@@ -24,6 +24,12 @@ RBTgen* retornaEsq(RBTgen* no);
 
 RBTgen* retornaDir(RBTgen* no);
 
+void RBTgenSetEsq(RBTgen* no, RBTgen* esq);
+
+void RBTgenSetDir(RBTgen* no, RBTgen* dir);
+
+int funcFalse(RBTgen *a, void *b);
+
 int comparaString(void* a, void* b);
 
 
@@ -59,7 +65,7 @@ RBTgen* buscaRBTgen(RBTgen* n, void* chave, int (*cb) (void*, void*));
 /// @param chave 
 /// @param função callback verifica se já existe valor asssociado a chave 
 /// @return Árvore com o novo nó inserido
-RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*), int (*cbDado) (RBTgen*, void*));
+RBTgen* insereRBTgen(RBTgen* no,void* chave, void* dado, int (*cb) (void*, void*), int (*cbDado) (RBTgen*, void*), void* (*cbALocaDado) (RBTgen*, void *));
 
 /// @brief Verifica se o nó é vermelho
 /// @param no 

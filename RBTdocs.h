@@ -44,6 +44,6 @@ void liberaNoRBTdocs(RBTgen* no);
 /// @brief Calcula o PageRank de todos os documentos da árvore
 /// @param no 
 /// @param numDocs 
-void calculaPageRankRBTdocs(RBTdocs* no, int numDocs);
+void calculaPageRankRBTdocs(RBTgen* no, int numDocs);
 
 #endif // RBT_DOCS_H

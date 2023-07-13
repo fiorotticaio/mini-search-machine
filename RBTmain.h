@@ -19,68 +19,49 @@ typedef struct infoMain InfoMain;
 /// @param chave 
 /// @param valor 
 /// @return Nó criado
-RBTmain* criaNoRBTmain(char* chave, Doc* valor);
-
-/// @brief Rotaciona o nó para a esquerda
-/// @param no 
-/// @return Nó rotacionado para a esquerda
-RBTmain* rotacionaEsqRBTmain(RBTmain* no);
-
-/// @brief Rotaciona o nó para a direita
-/// @param no 
-/// @return Nó rotacionado para a direita
-RBTmain* rotacionaDirRBTmain(RBTmain* no);
-
-/// @brief Troca a cor do nó
-/// @param no 
-void trocaCorRBTmain(RBTmain* no);
+RBTgen* criaNoRBTmain(char* chave, Doc* valor);
 
 /// @brief Busca um nó na árvore
 /// @param n 
 /// @param chave 
 /// @return Nó encontrado, ou NULL caso não exista
-RBTmain* buscaRBTmain(RBTmain* n, char* chave);
+RBTgen* buscaRBTmain(RBTgen* n, char* chave);
 
 /// @brief Insere um novo nó na árvore
 /// @param no 
 /// @param chave 
 /// @param valor 
 /// @return Árvore com o novo nó inserido
-RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor);
+RBTgen* insereRBTmain(RBTgen* no, char* chave, Doc* valor);
 
 /// @brief Preenche a árvore principal com as palavras dos documentos
 /// @param docs 
 /// @param stopWords 
 /// @param dirEntrada 
 /// @param T 
-void criaRBTpesquisa(RBTdocs* documentos, RBTgen* stopWords, char* dirEntrada, RBTmain** T);
+void criaRBTpesquisa(RBTgen* documentos, RBTgen* stopWords, char* dirEntrada, RBTgen** T);
 
 /// @brief Ordena os documentos de uma palavra de acordo com o page rank
 /// @param T 
-void ordenaValuesPorPageRank(RBTmain** T);
-
-/// @brief Verifica se o nó é vermelho
-/// @param no 
-/// @return treu se for vermelho, false caso contrário
-bool ehVermelhoRBTmain(RBTmain* no);
+RBTgen* ordenaValuesPorPageRank(RBTgen* T);
 
 /// @brief Imprime a árovre principal
 /// @param raiz
-void printRBTmain(RBTmain* no);
+void printRBTmain(RBTgen* no);
 
 /// @brief Interação com o usuário para a pesquisa
 /// @param T 
-bool promptPesquisa(RBTmain * T);
+bool promptPesquisa(RBTgen * T);
 
 /// @brief Faz a intersecção dos documentos de cada termo da pesquisa
 /// @param resultadoFinal 
 /// @param resultadoPalavra 
 /// @param nmrResultados 
 /// @return 
-Doc** interseccao(Doc** resultadoFinal, RBTmain* resultadoPalavra, int * nmrResultados);
+Doc** interseccao(Doc** resultadoFinal, RBTgen* resultadoPalavra, int * nmrResultados);
 
 /// @brief Libera a memória alocada para a árvore principal
 /// @param no 
-void liberaNoRBTmain(RBTmain* no);
+void liberaNoRBTmain(RBTgen* no);
 
 #endif // RBT_MAIN_H

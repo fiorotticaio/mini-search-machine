@@ -24,30 +24,30 @@ int main(int argc, char** argv) {
   int qtdDocs = 0;
   char** nomeDocumentos = leNomeDocumentos(diretorio, &qtdDocs);
   RBTgen* S = leStopWords(diretorio);
-  RBTdocs* documentos = leDocumentos(nomeDocumentos, qtdDocs, diretorio);
+  RBTgen* documentos = leDocumentos(nomeDocumentos, qtdDocs, diretorio);
   linkaDocumentos(documentos, diretorio);
 
   /*========== Cálculo do page rank final de todas as páginas ==========*/
   calculaPageRankRBTdocs(documentos, qtdDocs);
   
   /*================ Criação da árvore com as possíveis buscas ================*/
-  RBTmain* T = NULL;
+  RBTgen* T = NULL;
   criaRBTpesquisa(documentos,  S, diretorio, &T);
-  ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
+  //T = ordenaValuesPorPageRank(T); // ordenando os documentos em cada busca possível
 
   /*========== Debug ==========*/
-  // printRBTdocs(documentos);
-  // printRBTmain(T);
+   //printRBTdocs(documentos);
+   //printRBTmain(T);
 
   /* =========== Prompt de Buscas ===========  */
-  bool continuaPromp = true;
-  while(continuaPromp) continuaPromp=promptPesquisa(T);
+  //bool continuaPromp = true;
+  //while(continuaPromp) continuaPromp=promptPesquisa(T);
 
   /*========== Liberação da memória ==========*/
-  liberaNomeDocumentos(nomeDocumentos);
-  liberaNoRBTpal(S);
-  liberaNoRBTdocs(documentos);
-  liberaNoRBTmain(T);
+  //liberaNomeDocumentos(nomeDocumentos);
+  //liberaNoRBTpal(S);
+  //liberaNoRBTdocs(documentos);
+  //liberaNoRBTmain(T);
   
   return 0;
 }

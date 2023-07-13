@@ -4,9 +4,7 @@
 
 /* Red-Black Tree de Documentos/Páginas */
 
-int comparaString(void* a, void* b){
-    return strcmp((char*)a, (char*)b);
-}
+
 
 RBTgen* criaNoRBTdocs(char* chave, Doc* valor) {
     return criaNoRBTgen(strdup(chave), valor);
@@ -20,12 +18,13 @@ Doc* buscaRBTdocs(RBTgen* n, char* chave) {
 
 }
 
-int funcFalse(RBTgen *a, void *b){
-    return 0;
-}
 
+
+void* RetornaDado (RBTgen* r, void *info){
+    return info;
+}
 RBTgen* insereRBTdocs(RBTgen* no, char* chave, Doc* valor) {
-    return insereRBTgen(no, chave, valor, comparaString, funcFalse);
+    return insereRBTgen(no, chave, valor, comparaString, funcFalse, RetornaDado);
 }
 
 
@@ -34,7 +33,6 @@ void printRBTdocs(RBTgen* no) {
 }
 
 void liberaDadosRBTdocs(void *dados){
-    if(retornaChave(dados) != NULL) free(retornaChave(dados));
     if(retornaInfo (dados) != NULL) liberaDocumento(retornaInfo (dados));
     return;
 }
@@ -76,7 +74,7 @@ static void calcPG(RBTgen* no, int numDocs) {
     calcPG(retornaDir(no), numDocs);
 }
 
-void calculaPageRankRBTgen(RBTgen* no, int numDocs) {
+void calculaPageRankRBTdocs(RBTgen* no, int numDocs) {
     if (no == NULL) return;
     int k = 0;
     do {
