@@ -65,9 +65,8 @@ TST* rec_search(TST* t, String* key, int d) {
     unsigned char c = key->c[d];
     if (c < t->c) { return rec_search(t->l, key, d); }
     else if (c > t->c) { return rec_search(t->r, key, d); }
-    else if (d < key->len - 1) {
-    return rec_search(t->m, key, d+1);
-    } else { return t; }
+    else if (d < key->len - 1) { return rec_search(t->m, key, d+1);}
+    else { return t; }
 }
 
 TST* TST_search(TST* t, String* key) {
@@ -113,6 +112,8 @@ TST* criaTSTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, T
         if (buscaRBTPal(stopWords, palavra) == NULL) {
             String* str = String_create(palavra, strlen(palavra));
             T = TST_insert(T, str, doc);
+            free(str->c);
+            free(str);
         }
         
         free(palavra);
@@ -142,16 +143,21 @@ TST* ordenaValuesPorPageRankTST(TST* T){
 
 bool promptPesquisaTST(TST * T) {
     /* Recebendo todas as palavras buscadas em um vetor */
-    char buscas[100]; //TODO: valor 100 arbitrário
     printf("search:");
-    
-    /* Testando condição de parada */
-    if (scanf("%[^\n]", buscas)<0) return false;
-    
-    /* Limpando o buffer do scanf */
-    scanf("%*c"); 
+    char * buscas = NULL;
+    size_t size = 0;
+    size_t lido = getline(&buscas, &size, stdin);
 
-    char* palavra = strtok(buscas, " ");
+    /* Tratando caso seja recebido o caractere de "fim do arquivo" */
+    if (lido==EOF) {
+        free(buscas);
+        return false;
+    }
+
+    /* Retirando o \n do final da busca */
+    char* palavra = strtok(buscas, "\n");
+
+    palavra = strtok(palavra, " ");
     Doc** resultadoFinal = NULL;
     int nmrResultados = 0;
     TST* resultadoPalavra = NULL;
@@ -162,6 +168,8 @@ bool promptPesquisaTST(TST * T) {
         /* Achando os nó da RBT com os documentos que contém a palavra atual */
         String* str = String_create(palavra, strlen(palavra));
         resultadoPalavra = TST_search(T, str);
+        free(str->c);
+        free(str);
 
         /* Fazendo a intersecção com os resultados anteriores */
         resultadoFinal = interseccaoTST(resultadoFinal, resultadoPalavra, &nmrResultados);
@@ -220,6 +228,7 @@ bool promptPesquisaTST(TST * T) {
     }
 
     free(resultadoFinal);
+    free(buscas);
     
     return true;
 }

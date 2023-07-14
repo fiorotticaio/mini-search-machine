@@ -4,8 +4,10 @@
 #include "RBTdocs.h"
 #include "RBTmain.h"
 #include "TST.h"
+#include <time.h>
 
 int main(int argc, char** argv) {
+  clock_t start = clock();
   /**
    * @brief Significado de cada parâmetro:
    * argv[0] = ./trab3
@@ -30,9 +32,9 @@ int main(int argc, char** argv) {
   calculaPageRankRBTdocs(documentos, qtdDocs);
   
   /*================ Criação da árvore com as possíveis buscas ================*/
-  RBTmain* T = NULL;
-  criaRBTpesquisa(documentos,  S, diretorio, &T);
-  ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
+  // RBTmain* T = NULL;
+  // criaRBTpesquisa(documentos,  S, diretorio, &T);
+  // ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
 
   TST* Tst = NULL;
   Tst = criaTSTpesquisa(documentos, S, diretorio, Tst);
@@ -53,7 +55,12 @@ int main(int argc, char** argv) {
   liberaNomeDocumentos(nomeDocumentos);
   liberaNoRBTpal(S);
   liberaNoRBTdocs(documentos);
-  liberaNoRBTmain(T);
+  
+  TST_destroy(Tst);
+  // liberaNoRBTmain(T);
+
+  clock_t end = clock();
+  printf("tempo total com tst (exemplo2): %lf", (double) (end-start)/CLOCKS_PER_SEC);
   
   return 0;
 }
