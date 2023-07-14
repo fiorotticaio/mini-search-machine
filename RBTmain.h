@@ -52,11 +52,11 @@ RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor);
 /// @param stopWords 
 /// @param dirEntrada 
 /// @param T 
-void criaRBTpesquisa(RBTdocs* docs, RBTpal* stopWords, char* dirEntrada, RBTmain** T);
+RBTmain * criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, RBTmain* T);
 
-/// @brief Ordena os documentos de uma palavra de acordo com o page rank
+/// @brief Ordena os documentos de uma palavra de acordo com o nome do doc
 /// @param T 
-void ordenaValuesPorPageRank(RBTmain** T);
+RBTmain * ordenaPorNomeDoc(RBTmain* T);
 
 /// @brief Verifica se o nó é vermelho
 /// @param no 

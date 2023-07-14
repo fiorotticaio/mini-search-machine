@@ -103,11 +103,11 @@ RBTmain* insereRBTmain(RBTmain* no, char* chave, Doc* valor) {
     return no;
 }
 
-void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, RBTmain** T){
-    if (documentos == NULL) return;
+RBTmain * criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, RBTmain* T){
+    if (documentos == NULL) return NULL;
 
     /* Percorrendo recursivamente o ramo da esquerda */
-    if (getEsq(documentos) != NULL) criaRBTpesquisa(getEsq(documentos), stopWords, dirEntrada, T);
+    if (getEsq(documentos) != NULL) T = criaRBTpesquisa(getEsq(documentos), stopWords, dirEntrada, T);
     
     /* Acessando o documento atual */
     Doc* doc = getValor(documentos);
@@ -131,29 +131,33 @@ void criaRBTpesquisa(RBTdocs* documentos, RBTpal* stopWords, char* dirEntrada, R
 
         /* Adiciona a palavra nas pesquisas possíveis se não for uma stopwords */
         if (buscaRBTPal(stopWords, palavra) == NULL) {
-            *T = insereRBTmain(*T, palavra, doc);
+            T = insereRBTmain(T, palavra, doc);
         }
         
         free(palavra);
     }
 
     /* Percorrendo recursivamente o ramo da direita */
-    if (getDir(documentos) != NULL) criaRBTpesquisa(getDir(documentos), stopWords, dirEntrada, T);
+    if (getDir(documentos) != NULL) T = criaRBTpesquisa(getDir(documentos), stopWords, dirEntrada, T);
 
     fclose(arq);
+
+    return T;
 }
 
-void ordenaValuesPorPageRank(RBTmain** T){
-    if (*T == NULL) return;
+RBTmain * ordenaPorNomeDoc(RBTmain* T){
+    if (T == NULL) return NULL;
 
-    if((*T)->esq != NULL) ordenaValuesPorPageRank(&(*T)->esq);
+    if(T->esq != NULL) ordenaPorNomeDoc(T->esq);
 
     /* Nó atual */
-    Doc** docs = (*T)->valor;
-    int nDocs = (*T)->nDocs;
+    Doc** docs = T->valor;
+    int nDocs = T->nDocs;
     qsort(docs, nDocs, sizeof(Doc*), comparaLexicografico);
 
-    if((*T)->dir != NULL) ordenaValuesPorPageRank(&(*T)->dir);
+    if(T->dir != NULL) ordenaPorNomeDoc(T->dir);
+
+    return T;
 }
 
 bool ehVermelhoRBTmain(RBTmain* no) {

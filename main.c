@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
   
   /*================ Criação da árvore com as possíveis buscas ================*/
   RBTmain* T = NULL;
-  criaRBTpesquisa(documentos,  S, diretorio, &T);
-  ordenaValuesPorPageRank(&T); // ordenando os documentos em cada busca possível
+  T = criaRBTpesquisa(documentos,  S, diretorio, T);
+  T = ordenaPorNomeDoc(T); // ordenando os documentos em cada busca possível
 
   /*========== Debug ==========*/
   // printRBTdocs(documentos);
