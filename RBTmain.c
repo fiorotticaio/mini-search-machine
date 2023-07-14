@@ -186,22 +186,20 @@ int comparaPageRankComDesempate(const void* a, const void* b) {
 
 bool promptPesquisa(RBTmain * T, RBTpal * S) {
     /* Recebendo todas as palavras buscadas em um vetor */
-    printf("search:");
-    char * buscas = NULL;
+    char* buscas = NULL;
     size_t size = 0;
     size_t lido = getline(&buscas, &size, stdin);
 
     /* Tratando caso seja recebido o caractere de "fim do arquivo" */
-    if (lido==EOF) {
+    if (lido == EOF) {
         free(buscas);
         return false;
     }
-    
-    //TODO: esperar o giovane responder
-    // printf("%s", buscas);
 
     /* Retirando o \n do final da busca */
     char* palavra = strtok(buscas, "\n");
+
+    printf("search:%s", buscas);
 
     /* Pegando cada palavra separada por espaço */
     palavra = strtok(palavra, " ");
@@ -212,8 +210,8 @@ bool promptPesquisa(RBTmain * T, RBTpal * S) {
     /* Iterando por cada palavra da busca */
     while (palavra) {
 
-        /* Verifica se a */
-        if (buscaRBTPal(S, palavra)!=NULL) {
+        /* Verifica se não é stopword */
+        if (buscaRBTPal(S, palavra) != NULL) {
             palavra = strtok(NULL, " ");
             continue;   
         }
@@ -228,7 +226,7 @@ bool promptPesquisa(RBTmain * T, RBTpal * S) {
         palavra = strtok(NULL, " ");
 
         /* Caso tenha algum dos termo que não tenha sido achado, nem continua a procurar os outros */
-        if (resultadoFinal==NULL) break;
+        if (resultadoFinal == NULL) break;
     }
 
     /* Definido Buffer os valores de page ranks que serão impressos */
@@ -239,7 +237,7 @@ bool promptPesquisa(RBTmain * T, RBTpal * S) {
         /* Ordenando os resultados, incluindo criterio de desempate */
         qsort(resultadoFinal, nmrResultados, sizeof(Doc*), comparaPageRankComDesempate);
         
-        printf("pages:");
+        printf("\npages:");
 
         /* Iterando pelos resultados uma única vez, com ajuda de buffer */
         int i = 0;
@@ -250,7 +248,7 @@ bool promptPesquisa(RBTmain * T, RBTpal * S) {
 
             /* Fazendo um buffer com os valores de page rank */
             long double pageRank = getPageRankAtualDocumento(resultadoFinal[i]);
-            char aux[100];
+            char aux[100]; // Guarda o page rank de 1 arquivo temporariamente
             sprintf(aux, "%Lf", pageRank);
             if (pageRanksArquivos == NULL) {
                 pageRanksArquivos = strdup(aux);
