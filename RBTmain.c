@@ -197,6 +197,8 @@ bool promptPesquisa(RBTmain * T, RBTpal * S) {
         return false;
     }
     
+    //TODO: esperar o giovane responder
+    // printf("%s", buscas);
 
     /* Retirando o \n do final da busca */
     char* palavra = strtok(buscas, "\n");
