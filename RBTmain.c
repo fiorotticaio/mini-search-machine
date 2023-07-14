@@ -271,7 +271,7 @@ bool promptPesquisa(RBTmain * T, RBTpal * S) {
 
         free(pageRanksArquivos);
     } else {
-        printf("pages:\n");
+        printf("\npages:\n");
         printf("pr:\n");
     }
 

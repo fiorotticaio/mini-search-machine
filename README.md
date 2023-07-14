@@ -17,7 +17,7 @@
 - [x] falta um free (alocado em "linkaDocumentos")
   - Ele da erro nos casos exemplos 1 e 2, mas no 0 não
 - [x] Source and destination overlap in mempcpy na função promptPesquisa
-- [ ] Busca vazia retorna um arquivo (ta certo?)
+- [x] Busca vazia retorna um arquivo (ta certo?)
 
 ## MELHORIAS
 - [x] O vetor page rank está estático. Fazer dinâmico? (acho que não precisa)

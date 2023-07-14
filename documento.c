@@ -156,7 +156,6 @@ void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
         exit(1);
     }
 
-    // TODO: esses tamanhos de 100 são arbitrários?
     char nomeDoc[100], nomeDocLink[100];
     int qtdLinksDoc = 0;
 
@@ -167,7 +166,6 @@ void linkaDocumentos(RBTdocs* documentos, char* dirEntrada) {
         Doc* doc = buscaRBTdocs(documentos, nomeDoc);   // Busca o documento na árvore
         setNumLinksOutDocumento(doc, qtdLinksDoc);      // Atualiza o número de LINKS OUT do documento
         doc->linksOut = (Doc**) malloc(qtdLinksDoc * sizeof(Doc*)); // Aloca o vetor de LINKS OUT do documento
-        // FIXME: erro aqui
 
         int i = 0;
 
