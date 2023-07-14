@@ -41,6 +41,10 @@ void trocaCorRBTpal(RBTpal* no) {
 }
 
 char* buscaRBTPal(RBTpal* n, char* chave) {
+    /* Converte para minúsculo */
+    int i=0;
+    for (i = 0; chave[i] != '\0'; i++) chave[i] = tolower(chave[i]);  
+
     while (n != NULL) {
         int cmp = strcmp(chave, n->chave);
         if      (cmp < 0)   n = n->esq;
@@ -93,7 +97,13 @@ RBTpal* leStopWords(char* dirEntrada) {
 
     while (!feof(stopWordsArq)) {
         char stopWord[100]; // Variável auxiliar para leitura
+
         fscanf(stopWordsArq, "%[^\n]\n", stopWord); // Lê a stopWord
+        
+        /* Transforma a palavra em minusculo */
+        int i = 0;
+        for (i = 0; stopWord[i] != '\0'; i++) stopWord[i] = tolower(stopWord[i]);
+
         stopWords = insereRBTpal(stopWords, stopWord); // Insere a nova stopWord na RBT
         chaveStopWord++;
     }

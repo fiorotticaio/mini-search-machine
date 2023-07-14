@@ -184,7 +184,7 @@ int comparaPageRankComDesempate(const void* a, const void* b) {
     return strcmp(getNomeDocumento(docA), getNomeDocumento(docB));
 }
 
-bool promptPesquisa(RBTmain * T) {
+bool promptPesquisa(RBTmain * T, RBTpal * S) {
     /* Recebendo todas as palavras buscadas em um vetor */
     printf("search:");
     char * buscas = NULL;
@@ -209,6 +209,12 @@ bool promptPesquisa(RBTmain * T) {
     
     /* Iterando por cada palavra da busca */
     while (palavra) {
+
+        /* Verifica se a */
+        if (buscaRBTPal(S, palavra)!=NULL) {
+            palavra = strtok(NULL, " ");
+            continue;   
+        }
 
         /* Achando os nó da RBT com os documentos que contém a palavra atual */
         resultadoPalavra = buscaRBTmain(T, palavra);

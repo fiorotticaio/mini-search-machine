@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 
   /* =========== Prompt de Buscas ===========  */
   bool continuaPromp = true;
-  while(continuaPromp) continuaPromp=promptPesquisa(T);
+  while(continuaPromp) continuaPromp=promptPesquisa(T, S);
 
   /*========== Liberação da memória ==========*/
   liberaNomeDocumentos(nomeDocumentos);
